@@ -21,13 +21,13 @@ var HyojiKirikaeNum = 0;
 var Season = 0;
 
 var AIDipMisc = 40;<!--脅威度がこの値より小さいとき、AIは植民地拡大や宣戦布告を行い、大きいときは列強との融和政策に走る-->
-var WarJudgeMil = 1.25;<!--仮想敵国より戦力が1.25倍の時、宣戦布告する-->
+var WarJudgeMil = 1.35;<!--仮想敵国より戦力が1.25倍の時、宣戦布告する-->
 var WarJudgeRan = 0.45;<!--条件を満たした時、55％の確率で宣戦布告する-->
 var WarMisc = 4;<!--損害＝戦力*期待値2/4-->
-var ColDiffAI = 1;<!--AIの非列強国への影響度(1で100％、2で50％、3で33.3％)-->
+var ColDiffAI = 2;<!--AIの非列強国への影響度(1で100％、2で50％、3で33.3％)-->
 
 <!--【国家・地域・海域データ】-->
-//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義)、5保有領土数、6状態(0日本傀儡、98列強、99独立)
+//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義)、5保有領土数、6状態(0日本傀儡、97海域、98列強、99独立)
 //8=列強0との関係値、14旗、15本土(98海域、99非列強国は本土を持たない)、16接続海域
 NationArr = new Array();
 NationNam = new Array();
@@ -62,10 +62,10 @@ AreaOil = new Array();
 AreaShi = new Array();
 AreaNat = new Array();
 AreaCom = new Array();
-NationArr[1000] = new Array("日本海",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"海域.png",98);
-NationArr[1001] = new Array("東シナ海",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"海域.png",98);
-NationArr[1002] = new Array("南シナ海",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"海域.png",98);
-NationArr[1003] = new Array("ベンガル湾",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"海域.png",98);
+NationArr[1000] = new Array("日本海",0,0,0,1,0,97,0,0,0,0,0,0,0,0,0,0,"海域.png",99);
+NationArr[1001] = new Array("東シナ海",0,0,0,1,0,97,0,0,0,0,0,0,0,0,0,0,"海域.png",99);
+NationArr[1002] = new Array("南シナ海",0,0,0,1,0,97,0,0,0,0,0,0,0,0,0,0,"海域.png",99);
+NationArr[1003] = new Array("ベンガル湾",0,0,0,1,0,97,0,0,0,0,0,0,0,0,0,0,"海域.png",99);
 AreaArr[1000] = new Array("日本海",0,0,1000,0,0);
 AreaArr[1001] = new Array("東シナ海",0,0,1001,0,0);
 AreaArr[1002] = new Array("南シナ海",0,0,1002,0,0);
@@ -79,7 +79,7 @@ for (HenA=1000;HenA<=1003;HenA++) {
 	NationIdo[HenA] = NationArr[HenA][4];
 	NationHoy[HenA] = NationArr[HenA][5];
 	NationInd[HenA] = NationArr[HenA][6];
-	NationKan[0][HenA] = NationArr[HenA][7];
+	NationKan[0][HenA] = NationArr[HenA][7];<!--NationKan[0][1]は国家0が国家1をどう評価しているか-->
 	NationKan[1][HenA] = NationArr[HenA][8];
 	NationKan[2][HenA] = NationArr[HenA][9];
 	NationKan[3][HenA] = NationArr[HenA][10];
@@ -150,7 +150,7 @@ function Keisan() {
 	}
 	<!--シナリオ固有-->
 	if (Scenario==0)  { NationEco[2] += 5; NationEco[3] += 4; NationEco[6] += 1; NationEco[7] += 3; NationEco[8] *= 0.4; NationEco[8] = Math.round(NationEco[8]*10)/10; }
-	if (Scenario==41) { NationEco[1] += 4; }
+	if (Scenario==41) { NationEco[1] += 2; NationEco[6] *= 0.7; NationEco[6] = Math.round(NationEco[6]*10)/10; if (Event01==1) { NationEco[1] += 4; } }
 	if (Scenario==40) { NationEco[2] += 4; NationEco[8] *= 0.6; NationEco[8] = Math.round(NationEco[8]*10)/10; }
 }
 
@@ -159,7 +159,7 @@ function OilKonyuCom() {
 	OilKonyuNum = 0;
 	for (HenA=0;HenA<=19;HenA++) {
 		HenB = AreaShi[HenA];
-		HenC = NationKan[PlayNation][HenB];
+		if (NationInd[HenB]==98) { HenC = NationKan[HenB][PlayNation]; } if (NationInd[HenB]!=98) { HenC = NationKan[PlayNation][HenB]; }
 		HenC += 25;
 		if (HenC<0)  { HenC=0; }
 		if (HenC>50) { HenC=50; }
@@ -273,7 +273,7 @@ function For00Sel00() {
 				document.For04.Tex00Nam.defaultValue = "日本";
 				document.For04.Tex01Nam.defaultValue = "米国";
 				document.For04.Tex02Nam.defaultValue = "英国";
-				document.For04.Tex03Nam.defaultValue = "仏国";
+				document.For04.Tex03Nam.defaultValue = "×";
 				document.For04.Tex04Nam.defaultValue = "蘭国";
 				document.For04.Tex05Nam.defaultValue = "ソ連";
 				document.For04.Tex06Nam.defaultValue = "中国";
@@ -284,20 +284,20 @@ function For00Sel00() {
 
 				//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義)、5保有領土数、6状態(0日本傀儡、98列強、99独立)
 				//8=列強0との関係値、14旗、15本土、16接続海域数、17接続海域(1)、18接続海域(2)
-				NationArr[ 0] = new Array("大日本帝国",0,0,4,1,4,98,0,0,0,0,0,0,0,0,0,0,"日本.png",1,0,0,0);
-				NationArr[ 1] = new Array("アメリカ合衆国",0,0,3,0,2,98,0,0,0,0,0,0,0,0,0,0,"アメリカ.png",19,0,0,0);
-				NationArr[ 2] = new Array("大英帝国",0,0,3,0,5,98,0,0,0,0,0,0,0,0,0,0,"イギリス.png",18,0,0,0);
-				NationArr[ 3] = new Array("フランス共和国",0,0,2,0,2,98,0,0,0,0,0,0,0,0,0,0,"フランス.png",99,0,0,0);
-				NationArr[ 4] = new Array("オランダ王国",0,0,2,0,2,98,0,0,0,0,0,0,0,0,0,0,"オランダ.png",99,0,0,0);
-				NationArr[ 5] = new Array("ソビエト連邦",0,0,2,3,1,98,0,0,0,0,0,0,0,0,0,0,"ソ連.png",0,0,0,0);
-				NationArr[ 6] = new Array("中国(国民党)",0,0,3,1,3,98,0,0,0,0,0,0,0,0,0,0,"国民党.png",4,0,0,0);
+				NationArr[ 0] = new Array("大日本帝国",0,0,4,1,3,98,0,0,0,0,0,0,0,0,0,0,"日本.png",1,0,0,0);
+				NationArr[ 1] = new Array("アメリカ合衆国",0,0,3,1,3,98,0,0,0,0,0,0,0,0,0,0,"アメリカ.png",19,0,0,0);
+				NationArr[ 2] = new Array("大英帝国",0,0,3,1,5,98,0,0,0,0,0,0,0,0,0,0,"イギリス.png",18,0,0,0);
+				NationArr[ 3] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[ 4] = new Array("オランダ王国",0,0,2,1,2,98,0,0,0,0,0,0,0,0,0,0,"オランダ.png",99,0,0,0);
+				NationArr[ 5] = new Array("ソビエト連邦",0,0,2,1,1,98,0,0,0,0,0,0,0,0,0,0,"ソ連.png",0,0,0,0);
+				NationArr[ 6] = new Array("中国(国民党)",0,0,3,1,2,98,0,0,0,0,0,0,0,0,0,0,"国民党.png",4,0,0,0);
 				NationArr[ 7] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 				NationArr[ 8] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 				NationArr[ 9] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 
 				NationArr[10] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
-				NationArr[11] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
-				NationArr[12] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[11] = new Array("中国(軍閥)",0,0,2,1,1,6,0,0,0,0,0,0,0,0,0,0,"中華民国.png",99,1,1001,0);
+				NationArr[12] = new Array("仏領インドシナ",0,0,2,1,2,99,0,0,0,0,0,0,0,0,0,0,"仏領インドシナ.png",99,0,0,0);
 				NationArr[13] = new Array("タイ",0,0,1,1,1,99,0,0,0,0,0,0,0,0,0,0,"タイ.png",99,1,1002,0);
 				NationArr[14] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 				NationArr[15] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
@@ -318,13 +318,13 @@ function For00Sel00() {
 				AreaArr[ 0] = new Array("ウラジオストック",1,0,5,5,4);
 				AreaArr[ 1] = new Array("日本",4,0,0,5,1);
 				AreaArr[ 2] = new Array("朝鮮",2,0,0,2,1);
-				AreaArr[ 3] = new Array("満州",1,2,0,3,2);
-				AreaArr[ 4] = new Array("北京",2,0,6,3,2);
+				AreaArr[ 3] = new Array("満州",1,2,0,2,2);
+				AreaArr[ 4] = new Array("北京",2,0,11,3,2);
 				AreaArr[ 5] = new Array("上海",2,0,6,3,2);
 				AreaArr[ 6] = new Array("広州",2,0,6,3,2);
-				AreaArr[ 7] = new Array("南洋諸島",1,0,0,0,0);
-				AreaArr[ 8] = new Array("ハノイ",1,0,3,3,3);
-				AreaArr[ 9] = new Array("サイゴン",1,0,3,3,3);
+				AreaArr[ 7] = new Array("南洋諸島",0,0,1,0,0);
+				AreaArr[ 8] = new Array("ハノイ",1,0,12,3,3);
+				AreaArr[ 9] = new Array("サイゴン",1,0,12,3,3);
 				AreaArr[10] = new Array("タイ",1,0,13,1,0);
 				AreaArr[11] = new Array("フィリピン",1,0,1,3,0);
 				AreaArr[12] = new Array("サラワク",0,3,2,0,0);
@@ -488,12 +488,6 @@ function Area() {
 	document.For02.Tex01.defaultValue = NationEco[HenA];
 	document.For02.Tex02.defaultValue = NationOil[HenA];
 	document.For02.Tex03.defaultValue = NationArm[HenA];
-	switch (NationIdo[HenA]) {
-		case 0: document.For02.Tex04.defaultValue = "自由主義"; break;
-		case 1: document.For02.Tex04.defaultValue = "帝国主義"; break;
-		case 2: document.For02.Tex04.defaultValue = "軍国主義"; break;
-		case 3: document.For02.Tex04.defaultValue = "共産主義"; break;
-	}
 	if (Scenario==0) {<!--シナリオ固有-->
 		switch (NationInd[HenA]) {
 			case  0: document.For02.Tex05.defaultValue = "日本保護"; break;
@@ -505,7 +499,7 @@ function Area() {
 			case  6: document.For02.Tex05.defaultValue = "露国保護"; break;
 			case  7: document.For02.Tex05.defaultValue = "独国保護"; break;
 			case  8: document.For02.Tex05.defaultValue = "清国保護"; break;
-			case  9: document.For02.Tex05.defaultValue = "追加枠"; break;
+			case 97: document.For02.Tex05.defaultValue = "海域"; break;
 			case 98: document.For02.Tex05.defaultValue = "列強"; break;
 			case 99: document.For02.Tex05.defaultValue = "独立"; break;
 		}
@@ -519,6 +513,7 @@ function Area() {
 			case  4: document.For02.Tex05.defaultValue = "蘭国保護"; break;
 			case  5: document.For02.Tex05.defaultValue = "ソ連保護"; break;
 			case  6: document.For02.Tex05.defaultValue = "中国保護"; break;
+			case 97: document.For02.Tex05.defaultValue = "海域"; break;
 			case 98: document.For02.Tex05.defaultValue = "列強"; break;
 			case 99: document.For02.Tex05.defaultValue = "独立"; break;
 		}
@@ -531,6 +526,7 @@ function Area() {
 			case  3: document.For02.Tex05.defaultValue = "豪州保護"; break;
 			case  4: document.For02.Tex05.defaultValue = "蘭国保護"; break;
 			case  5: document.For02.Tex05.defaultValue = "清国保護"; break;
+			case 97: document.For02.Tex05.defaultValue = "海域"; break;
 			case 98: document.For02.Tex05.defaultValue = "列強"; break;
 			case 99: document.For02.Tex05.defaultValue = "独立"; break;
 		}
@@ -538,36 +534,92 @@ function Area() {
 	document.For03.Tex00.defaultValue = AreaNam[AreaNum];
 	document.For03.Tex01.defaultValue = AreaEco[AreaNum];
 	document.For03.Tex02.defaultValue = AreaOil[AreaNum];
-	document.For04.Tex00.defaultValue = NationKan[0][HenA];
-	document.For04.Tex01.defaultValue = NationKan[1][HenA];
-	document.For04.Tex02.defaultValue = NationKan[2][HenA];
-	document.For04.Tex03.defaultValue = NationKan[3][HenA];
-	document.For04.Tex04.defaultValue = NationKan[4][HenA];
-	document.For04.Tex05.defaultValue = NationKan[5][HenA];
-	document.For04.Tex06.defaultValue = NationKan[6][HenA];
-	document.For04.Tex07.defaultValue = NationKan[7][HenA];
-	document.For04.Tex08.defaultValue = NationKan[8][HenA];
-	document.For04.Tex09.defaultValue = NationKan[9][HenA];
-	document.For04.Tex10.defaultValue = NationArm[0];
-	document.For04.Tex11.defaultValue = NationArm[1];
-	document.For04.Tex12.defaultValue = NationArm[2];
-	document.For04.Tex13.defaultValue = NationArm[3];
-	document.For04.Tex14.defaultValue = NationArm[4];
-	document.For04.Tex15.defaultValue = NationArm[5];
-	document.For04.Tex16.defaultValue = NationArm[6];
-	document.For04.Tex17.defaultValue = NationArm[7];
-	document.For04.Tex18.defaultValue = NationArm[8];
-	document.For04.Tex19.defaultValue = NationArm[9];
-	document.For04.Tex20.defaultValue = NationEco[0];
-	document.For04.Tex21.defaultValue = NationEco[1];
-	document.For04.Tex22.defaultValue = NationEco[2];
-	document.For04.Tex23.defaultValue = NationEco[3];
-	document.For04.Tex24.defaultValue = NationEco[4];
-	document.For04.Tex25.defaultValue = NationEco[5];
-	document.For04.Tex26.defaultValue = NationEco[6];
-	document.For04.Tex27.defaultValue = NationEco[7];
-	document.For04.Tex28.defaultValue = NationEco[8];
-	document.For04.Tex29.defaultValue = NationEco[9];
+	if (NationInd[HenA]==98) {
+		document.For04.Tex00.defaultValue = NationKan[HenA][0];
+		document.For04.Tex01.defaultValue = NationKan[HenA][1];
+		document.For04.Tex02.defaultValue = NationKan[HenA][2];
+		document.For04.Tex03.defaultValue = NationKan[HenA][3];
+		document.For04.Tex04.defaultValue = NationKan[HenA][4];
+		document.For04.Tex05.defaultValue = NationKan[HenA][5];
+		document.For04.Tex06.defaultValue = NationKan[HenA][6];
+		document.For04.Tex07.defaultValue = NationKan[HenA][7];
+		document.For04.Tex08.defaultValue = NationKan[HenA][8];
+		document.For04.Tex09.defaultValue = NationKan[HenA][9];
+		document.For04.Tex10.defaultValue = NationKan[0][HenA];
+		document.For04.Tex11.defaultValue = NationKan[1][HenA];
+		document.For04.Tex12.defaultValue = NationKan[2][HenA];
+		document.For04.Tex13.defaultValue = NationKan[3][HenA];
+		document.For04.Tex14.defaultValue = NationKan[4][HenA];
+		document.For04.Tex15.defaultValue = NationKan[5][HenA];
+		document.For04.Tex16.defaultValue = NationKan[6][HenA];
+		document.For04.Tex17.defaultValue = NationKan[7][HenA];
+		document.For04.Tex18.defaultValue = NationKan[8][HenA];
+		document.For04.Tex19.defaultValue = NationKan[9][HenA];
+	}
+	if (NationInd[HenA]!=98) {
+		document.For04.Tex00.defaultValue = NationKan[0][HenA];
+		document.For04.Tex01.defaultValue = NationKan[1][HenA];
+		document.For04.Tex02.defaultValue = NationKan[2][HenA];
+		document.For04.Tex03.defaultValue = NationKan[3][HenA];
+		document.For04.Tex04.defaultValue = NationKan[4][HenA];
+		document.For04.Tex05.defaultValue = NationKan[5][HenA];
+		document.For04.Tex06.defaultValue = NationKan[6][HenA];
+		document.For04.Tex07.defaultValue = NationKan[7][HenA];
+		document.For04.Tex08.defaultValue = NationKan[8][HenA];
+		document.For04.Tex09.defaultValue = NationKan[9][HenA];
+		document.For04.Tex10.defaultValue = "×";
+		document.For04.Tex11.defaultValue = "×";
+		document.For04.Tex12.defaultValue = "×";
+		document.For04.Tex13.defaultValue = "×";
+		document.For04.Tex14.defaultValue = "×";
+		document.For04.Tex15.defaultValue = "×";
+		document.For04.Tex16.defaultValue = "×";
+		document.For04.Tex17.defaultValue = "×";
+		document.For04.Tex18.defaultValue = "×";
+		document.For04.Tex19.defaultValue = "×";
+	}
+	if (NationInd[HenA]==97) {
+		document.For04.Tex00.defaultValue = NationKan[0][HenA];
+		document.For04.Tex01.defaultValue = NationKan[1][HenA];
+		document.For04.Tex02.defaultValue = NationKan[2][HenA];
+		document.For04.Tex03.defaultValue = NationKan[3][HenA];
+		document.For04.Tex04.defaultValue = NationKan[4][HenA];
+		document.For04.Tex05.defaultValue = NationKan[5][HenA];
+		document.For04.Tex06.defaultValue = NationKan[6][HenA];
+		document.For04.Tex07.defaultValue = NationKan[7][HenA];
+		document.For04.Tex08.defaultValue = NationKan[8][HenA];
+		document.For04.Tex09.defaultValue = NationKan[9][HenA];
+		document.For04.Tex10.defaultValue = "×";
+		document.For04.Tex11.defaultValue = "×";
+		document.For04.Tex12.defaultValue = "×";
+		document.For04.Tex13.defaultValue = "×";
+		document.For04.Tex14.defaultValue = "×";
+		document.For04.Tex15.defaultValue = "×";
+		document.For04.Tex16.defaultValue = "×";
+		document.For04.Tex17.defaultValue = "×";
+		document.For04.Tex18.defaultValue = "×";
+		document.For04.Tex19.defaultValue = "×";
+	}
+	document.For04.Tex20.defaultValue = NationArm[0];
+	document.For04.Tex21.defaultValue = NationArm[1];
+	document.For04.Tex22.defaultValue = NationArm[2];
+	document.For04.Tex23.defaultValue = NationArm[3];
+	document.For04.Tex24.defaultValue = NationArm[4];
+	document.For04.Tex25.defaultValue = NationArm[5];
+	document.For04.Tex26.defaultValue = NationArm[6];
+	document.For04.Tex27.defaultValue = NationArm[7];
+	document.For04.Tex28.defaultValue = NationArm[8];
+	document.For04.Tex29.defaultValue = NationArm[9];
+	document.For04.Tex30.defaultValue = NationEco[0];
+	document.For04.Tex31.defaultValue = NationEco[1];
+	document.For04.Tex32.defaultValue = NationEco[2];
+	document.For04.Tex33.defaultValue = NationEco[3];
+	document.For04.Tex34.defaultValue = NationEco[4];
+	document.For04.Tex35.defaultValue = NationEco[5];
+	document.For04.Tex36.defaultValue = NationEco[6];
+	document.For04.Tex37.defaultValue = NationEco[7];
+	document.For04.Tex38.defaultValue = NationEco[8];
+	document.For04.Tex39.defaultValue = NationEco[9];
 	HyojiKirikaeNum=0;
 	document.For01.Tex02.defaultValue = Money;
 	document.For01.Tex03.defaultValue = Oil;
@@ -662,13 +714,13 @@ function AIact() {
 		AIKyo[AI]=0;<!--脅威度計算-->
 		for (HenA=0;HenA<=9;HenA++) {
 			if (NationHoy[HenA]>0) {
-				HenB = NationKan[AI][HenA]*(-1);
+				HenB = NationKan[HenA][AI]*(-1);
 				if (HenB<0) { HenB=0; }
 				HenC=0;
-				for (HenD=0;HenD<=9;HenD++) {
+				for (HenD=0;HenD<=9;HenD++) {<!--相手国の脅威度計算-->
 					if (NationHoy[HenD]>0) {
 						HenE = 0;
-						HenE += NationKan[HenA][HenD]*(-1);
+						HenE += NationKan[HenD][HenA]*(-1);
 						if (HenE<0) { HenE=0; }
 						HenC += HenE*(NationArm[HenD]/NationArm[HenA]);
 					}
@@ -680,9 +732,8 @@ function AIact() {
 		if (AIKyo[AI]>=AIDipMisc) {<!--列強との融和策-->
 			for (HenA=0;HenA<=9;HenA++) {
 				if (NationHoy[HenA]>=1) {
-					NationKan[AI][HenA] += Math.round(2*NationArm[AI]/NationArm[HenA]+1);
-					NationKan[HenA][AI] = NationKan[AI][HenA];
-					if (NationKan[AI][HenA]>50) { NationKan[AI][HenA]=50; NationKan[HenA][AI]=50; }
+					NationKan[HenA][AI] += Math.round(2*NationArm[AI]/NationArm[HenA]+1);
+					if (NationKan[HenA][AI]>50) { NationKan[HenA][AI]=50; }
 				}
 			}
 			NationKan[AI][AI]-=3;
@@ -700,9 +751,9 @@ function AIact() {
 							if (NationKan[AI][HenA]+(NationArm[AI]/NationArm[HenA])*5>=60) {
 								if (NationInd[HenA]!=AI) {
 									alert(NationNam[AI]+"が"+NationNam[HenA]+"を保護国としました。\n国際社会はこのような暴挙を許さないでしょう。");
-									NationKan[AI][NationInd[HenA]] -= 25;
 									if ([NationInd[HenA]]==98) {
 										NationKan[NationInd[HenA]][AI] -= 25;
+										if (NationKan[NationInd[HenA]][AI]<-50) { NationKan[NationInd[HenA]][AI]=-50; }
 									}
 								}
 								NationInd[HenA]=AI;
@@ -710,9 +761,8 @@ function AIact() {
 								for (HenB=0;HenB<=9;HenB++) {
 									if (HenB!=AI) {
 										HenC = Math.round((NationKan[HenB][HenA]+50)*(NationEco[HenB]+NationOil[HenB])/50);
-										NationKan[AI][HenB] -= HenC;
 										NationKan[HenB][AI] -= HenC;
-										if (NationKan[AI][HenB]<-50) { NationKan[AI][HenB]=-50; NationKan[HenB][AI]=-50; }
+										if (NationKan[HenB][AI]<-50) { NationKan[HenB][AI]=-50; }
 										if (NationKan[HenB][HenA]>0) { NationKan[HenB][HenA]=0; }
 									}
 								}
@@ -750,7 +800,7 @@ function OilKonyuAI() {
 	AIOir[AI] = 0;
 	for (HenA=0;HenA<=19;HenA++) {
 		HenB = AreaShi[HenA];
-		HenC = NationKan[AI][HenB];
+		if (NationInd[HenB]==98) { HenC = NationKan[HenB][AI]; } if (NationInd[HenB]!=98) { HenC = NationKan[AI][HenB]; }
 		HenC += 25;
 		if (HenC<0)  { HenC=0; }
 		if (HenC>50) { HenC=50; }
@@ -775,25 +825,21 @@ function War() {
 		<!--外交修正-->
 		for (HenA=0;HenA<=9;HenA++) {<!--全列強との関係に、(自国と宣戦布告した国との関係性+50)/2マイナス-->
 			if (HenA!=VicNation && HenA!=LosNation) {
-				NationKan[VicNation][HenA]-=Math.round((NationKan[VicNation][LosNation]+50)/2);
 				NationKan[HenA][VicNation]-=Math.round((NationKan[VicNation][LosNation]+50)/2);
 			}
 		}
 		for (HenA=0;HenA<=9;HenA++) {<!--全列強との関係に、(各列強と宣戦布告した国との関係性+50)/2マイナス-->
 			if (HenA!=VicNation && HenA!=LosNation) {
-				NationKan[VicNation][HenA]-=Math.round((NationKan[LosNation][HenA]+50)/2);
 				NationKan[HenA][VicNation]-=Math.round((NationKan[LosNation][HenA]+50)/2);
 			}
 		}
 		for (HenA=0;HenA<=9;HenA++) {<!--関係性の範囲(50～マイナス50)-->
-			if (NationKan[VicNation][HenA]>50) {
-				NationKan[VicNation][HenA]=50;
+			if (NationKan[HenA][VicNation]>50) {
 				NationKan[HenA][VicNation]=50;
 			}
 		}
 		for (HenA=0;HenA<=9;HenA++) {
-			if (NationKan[VicNation][HenA]<-50) {
-			NationKan[VicNation][HenA]=-50;
+			if (NationKan[HenA][VicNation]<-50) {
 			NationKan[HenA][VicNation]=-50;
 			}
 		}
@@ -1014,9 +1060,8 @@ function Event() {
 				}
 			}
 			if (YearNum==1898 && NationHoy[2]>=1 && NationHoy[5]>=1 && Event03==0) {
-				alert("アメリカにおいて「メイン号事件」が発生しました。\n米西の関係性に-40の変化");
+				alert("アメリカにおいて「メイン号事件」が発生しました。\nアメリカのスペインに対する評価に-40の変化");
 				NationKan[2][5]-=40;
-				NationKan[5][2]-=40;
 				Event03=1;
 			}
 			if (PlayNation!=0 && PlayNation!=2) {
@@ -1030,13 +1075,13 @@ function Event() {
 			<!--日清戦争、日英同盟、日露戦争は未実装-->
 		}
 		if (Scenario==41) {
-			if (YearNum==1940 && NationHoy[0]>=1 && NationHoy[4]>=1 && Event00==0) {
+			if (YearNum==1940 && NationHoy[0]>=1 && NationHoy[4]>=1 && Event00==1) {<!--停止中-->
 					alert("日ソ間で「日ソ不可侵条約」が発生しました。\n日ソの関係性が+15に変化");
 					NationKan[0][4]=15;
 					NationKan[4][0]=15;
 					Event00=1;
 			}
-			if (AreaShi[11]!=1 && NationHoy[1]>=1 && Event01==0) {
+			if (NationHoy[1]<=2 && NationHoy[1]>=1 && Event01==0) {
 					alert("アメリカにおいて「リメンバーパールハーバー」が発生しました。\nアメリカの経済力に+4の変化");
 					NationEco[1]+=4;
 					Event01=1;
@@ -1045,6 +1090,12 @@ function Event() {
 					alert("日本において「国家総動員法」が発生しました。\n日本の経済力に+1の変化");
 					AreaEco[1]+=1;
 					Event02=1;
+			}
+			if (YearNum==1945 && NationHoy[5]>=1 && Event03==0) {
+					alert("ソビエトにおいて「欧州戦争の終結」が発生しました。\nソビエトの軍事力に+4の変化\nソビエトの経済力に+2の変化");
+					NationArm[5]+=4;
+					NationEco[5]+=2;
+					Event03=1;
 			}
 		}
 		for (HenA=0;HenA<=9;HenA++) {<!--関係性の範囲50～-50-->
@@ -1146,22 +1197,19 @@ function ComDip() {
 			if (HenA==PlayNation) {
 				alert("自国との関係を改善することはできません");
 			}
-			if (NationHoy[HenA]==98) {
+			if (NationInd[HenA]==97) {
 				alert("海域との関係を改善することはできません");
 			}
 			if (HenA!=PlayNation && NationHoy[HenA]!=98) {
 				if (NationInd[HenA]==98) {<!--列強-->
-					NationKan[PlayNation][HenA] += Math.round((NationArm[PlayNation]/NationArm[HenA])*3+1);
-					NationKan[HenA][PlayNation] = NationKan[PlayNation][HenA];
+					NationKan[HenA][PlayNation] += Math.round((NationArm[PlayNation]/NationArm[HenA])*3+1);
 					if (NationKan[PlayNation][HenA]>50) {<!--関係性51以上にはならない-->
-						NationKan[PlayNation][HenA]=50;
 						NationKan[HenA][PlayNation]=50;
 					}
 					if (NationIdo[HenA]==3 && NationKan[PlayNation][HenA]>0) {<!--共産国家とは関係性1以上にはならない-->
-						NationKan[PlayNation][HenA]=0;
 						NationKan[HenA][PlayNation]=0;
 					}
-					alert(NationNam[HenA]+"との関係が"+NationKan[PlayNation][HenA]+"になりました。");
+					alert(NationNam[HenA]+"の我が国に対する評価が"+NationKan[HenA][PlayNation]+"になりました。");
 				}
 				if (NationInd[HenA]!=98) {<!--非列強・独立国-->
 					if (NationKai[HenA]==1) { HenB = NationKan[PlayNation][NationKai1[HenA]]; }
@@ -1173,12 +1221,12 @@ function ComDip() {
 					}
 					alert(NationNam[HenA]+"との関係が"+NationKan[PlayNation][HenA]+"になりました。");
 					if (NationInd[HenA]!=98) {
-						if (NationKan[PlayNation][HenA]+(NationArm[PlayNation]/NationArm[HenA])*5>=55) {
+						if (NationKan[PlayNation][HenA]+(NationArm[PlayNation]/NationArm[HenA])*5>=60) {
 							if (NationInd[HenA]!=PlayNation) {
 								alert(NationNam[HenA]+"を我が国の保護国とすることに成功しました。");
-								NationKan[PlayNation][NationInd[HenA]] -= 25;
-								if ([NationInd[HenA]]==98) {
-									NationKan[NationInd[HenA]][AI] -= 25;
+								if ([NationInd[HenA]]!=99) {
+									NationKan[NationInd[HenA]][PlayNation] -= 25;
+									if (NationKan[NationInd[HenA]][PlayNation]<-50) { NationKan[NationInd[HenA]][PlayNation]=-50; }
 								}
 							}
 							NationInd[HenA]=PlayNation;
@@ -1186,10 +1234,9 @@ function ComDip() {
 							for (HenB=0;HenB<=9;HenB++) {
 								if (HenB!=PlayNation) {
 									HenC = Math.round((NationKan[HenB][HenA]+50)*(NationEco[HenB]+NationOil[HenB])/50);
-									NationKan[PlayNation][HenB] -= HenC;
 									NationKan[HenB][PlayNation] -= HenC;
 									if (NationKan[HenB][HenA]>0) { NationKan[HenB][HenA]=0; }
-									if (NationKan[PlayNation][HenA]<-50) { NationKan[PlayNation][HenA]=-50; NationKan[HenA][PlayNation]=-50; }
+									if (NationKan[HenB][PlayNation]<-50) { NationKan[HenB][PlayNation]=-50; }
 								}
 							}
 						}
@@ -1231,20 +1278,19 @@ function ComDiw() {
 	if (GameNum==1) {
 		if (KanKai==1) { alert("このコマンドは1年に1回しか実行できません"); }
 		if (KanKai==0) {
-			if (NationInd[AreaShi[AreaNum]]!=98) {
+			if (NationInd[AreaShi[AreaNum]]!=98 && NationInd[AreaShi[AreaNum]]!=97) {<!--海域を砲艦外交した際、二重に警告が出るのを防止するため-->
 				alert("非列強国との関係性を悪化させることはできません。");
 			}
 			if (AreaShi[AreaNum]==PlayNation) {
 				alert("自国との関係性を悪化させることはできません。");
 			}
-			if (NationEco[AreaShi[AreaNum]]==0) {
+			if (NationHoy[AreaShi[AreaNum]]==0) {
 				alert("存在しない国家との関係性を悪化させることはできません。");
 			}
-			if (HenA!=PlayNation && NationEco[AreaShi[AreaNum]]!=0 && NationInd[AreaShi[AreaNum]]==98) {
+			if (HenA!=PlayNation && NationHoy[AreaShi[AreaNum]]!=0 && NationInd[AreaShi[AreaNum]]==98) {
 				if (AreaShi[AreaNum]!=PlayNation) {
 					NationKan[PlayNation][AreaShi[AreaNum]] -= Math.round(NationArm[AreaShi[AreaNum]]*3/(NationArm[PlayNation]));
-					NationKan[AreaShi[AreaNum]][PlayNation] = NationKan[PlayNation][AreaShi[AreaNum]];
-					alert(NationNam[AreaShi[AreaNum]]+"との関係が"+NationKan[PlayNation][AreaShi[AreaNum]]+"になりました");
+					alert("我が国の"+NationNam[AreaShi[AreaNum]]+"に対する評価が"+NationKan[PlayNation][AreaShi[AreaNum]]+"になりました");
 					HomeLandHyouji()
 					KanKai=1;
 					if (Settei01==1) { ComTur() }
@@ -1277,7 +1323,7 @@ function ComWar() {
 						case 2: HenZ=0; break;
 					}
 					if (HenB>HenZ) {
-						alert("関係性がマイナス"+HenZ+"以下でないと宣戦布告できません");
+						alert("我が国の宣戦国に対する評価がマイナス"+HenZ+"以下でないと宣戦布告できません");
 					}
 					if (HenB<=HenZ) {
 						if (window.confirm(NationNam[HenA]+"に宣戦布告しますか？")) {
@@ -1435,11 +1481,38 @@ function ComTurAct() {
 			if (HenD!=99) { document.getElementById("Area_"+AreaNam[HenA]+"_png").src=NationHata[HenD]; }
 			if (HenD==99) { document.getElementById("Area_"+AreaNam[HenA]+"_png").src="海域.png"; }
 		}
+		<!--滅亡国家の数値リセット-->
+		for (HenA=0;HenA<=9;HenA++) {
+			if (NationHoy[HenA]==0) {
+				NationArm[HenA]=0;
+				NationEco[HenA]=0;
+				NationKan[HenA][0]=0;
+				NationKan[HenA][1]=0;
+				NationKan[HenA][2]=0;
+				NationKan[HenA][3]=0;
+				NationKan[HenA][4]=0;
+				NationKan[HenA][5]=0;
+				NationKan[HenA][6]=0;
+				NationKan[HenA][7]=0;
+				NationKan[HenA][8]=0;
+				NationKan[HenA][9]=0;
+				NationKan[0][HenA]=0;
+				NationKan[1][HenA]=0;
+				NationKan[2][HenA]=0;
+				NationKan[3][HenA]=0;
+				NationKan[4][HenA]=0;
+				NationKan[5][HenA]=0;
+				NationKan[6][HenA]=0;
+				NationKan[7][HenA]=0;
+				NationKan[8][HenA]=0;
+				NationKan[9][HenA]=0;
+			}
+		}
 		<!--プレイヤー用・資金・石油収支計算-->
 		Money+=NationEco[PlayNation];
 		Money-=NationArm[PlayNation]/2;	
 		if (Scenario<10) {
-			if (Money<0) { NationArm[PlayNation]-=0.5; alert("維持費不足により軍の戦力が低下しています"); Money=0; }
+			if (Money<0) { NationArm[PlayNation]-=0.5; alert("資金不足により軍の戦力が低下しています"); Money=0; }
 			if (NationArm[PlayNation]<0) { NationArm[PlayNation]=0; }
 		}
 		if (Money>NationEco[PlayNation]*3) { Money=NationEco[PlayNation]*3; }
@@ -1447,14 +1520,15 @@ function ComTurAct() {
 			Oil-=NationArm[PlayNation]/2;
 			if (Oil<0) { NationArm[PlayNation]-=0.5; alert("石油不足により軍の戦力が低下しています"); Oil=0; }
 			if (NationArm[PlayNation]<0) { NationArm[PlayNation]=0; }
-
 			if (Oil>NationEco[PlayNation]*4) { Oil=NationEco[PlayNation]*4; }
 			OilKonyuCom()
 		}
 		if (Settei02==01) {
 			while (Oil<NationArm[PlayNation]) {
-				Money--;
-				Oil+=OilKonyuNum;
+				if (Money>0) {
+					Money--;
+					Oil+=OilKonyuNum;
+				}
 			}
 		}
 		Money = Math.round(Money*10)/10;
@@ -1683,25 +1757,26 @@ function HyojiKirikae() {
 
 <table border=1 style="position:absolute; top:0px;left:650px;border-collapse:collapse;"><tr><td><form name="For00" action="#"><select name="S00" onChange="For00Sel00()">
 	<option>帝国主義全盛(1886年)
+	<option>軍靴の足音(1936年)
 </select></form></td><td><form name="For01" action="#"><input name="Tex00" type="text" size="1" value="1886">年</td><td><input name="Tex01" type="text" size="1" value="前期"></td><td><input type="button" value="決定" onclick="Kettei()"></td><td>資金<input name="Tex02" type="text" size="1" value="0"></td><td>備蓄石油<input name="Tex03" type="text" size="1" value="0"></form></tr></table>
 
 <table border=1 style="position:absolute; top:40px;left:650px;border-collapse:collapse;">
-<tr><td><form name="For02" action="#"><input name="Tex00" type="text" size="9" value="大日本帝国"></td><td>経済<input name="Tex01" type="text" size="2" value="4"></td><td>石油<input name="Tex02" type="text" size="2" value="0"></td><td>軍事力<input name="Tex03" type="text" size="2" value="2"></td><td>体制<input name="Tex04" type="text" size="4" value="帝国主義"></td><td>状態<input name="Tex05" type="text" size="4" value="列強"></form></td></tr></table>
+<tr><td><form name="For02" action="#"><input name="Tex00" type="text" size="9" value="大日本帝国"></td><td>経済<input name="Tex01" type="text" size="2" value="4"></td><td>石油<input name="Tex02" type="text" size="2" value="0"></td><td>軍事力<input name="Tex03" type="text" size="2" value="2"></td><td>状態<input name="Tex05" type="text" size="4" value="列強"></form></td></tr></table>
 
 <table border=1 style="position:absolute; top:80px;left:650px;border-collapse:collapse;"><form name="For03" action="#"><tr><td>地域名<input name="Tex00" type="text" size="11" value="日本"></td><td>経済<input name="Tex01" type="text" size="2" value="4"></td><td>石油<input name="Tex02" type="text" size="2" value="0"></form></td></tr></table>
 
 <table border=1 style="position:absolute; top:120px;left:650px;border-collapse:collapse;"><form name="For04" action="#">
-<tr><td></td><td>関係</td><td>軍事力</td><td>経済力</td></tr>
-<tr><td><input name="Tex00Nam" type="text" size="2" value="日本"></td><td><input name="Tex00" type="text" size="2" value="0"></td><td><input name="Tex10" type="text" size="2" value="2"></td><td><input name="Tex20" type="text" size="2" value="4"></td></tr>
-<tr><td><input name="Tex01Nam" type="text" size="2" value="英国"></td><td><input name="Tex01" type="text" size="2" value="0"></td><td><input name="Tex11" type="text" size="2" value="3"></td><td><input name="Tex21" type="text" size="2" value="7"></td></tr>
-<tr><td><input name="Tex02Nam" type="text" size="2" value="米国"></td><td><input name="Tex02" type="text" size="2" value="0"></td><td><input name="Tex12" type="text" size="2" value="3"></td><td><input name="Tex22" type="text" size="2" value="5"></td></tr>
-<tr><td><input name="Tex03Nam" type="text" size="2" value="仏国"></td><td><input name="Tex03" type="text" size="2" value="0"></td><td><input name="Tex13" type="text" size="2" value="3"></td><td><input name="Tex23" type="text" size="2" value="6"></td></tr>
-<tr><td><input name="Tex04Nam" type="text" size="2" value="蘭国"></td><td><input name="Tex04" type="text" size="2" value="0"></td><td><input name="Tex14" type="text" size="2" value="2"></td><td><input name="Tex24" type="text" size="2" value="4"></td></tr>
-<tr><td><input name="Tex05Nam" type="text" size="2" value="西国"></td><td><input name="Tex05" type="text" size="2" value="0"></td><td><input name="Tex15" type="text" size="2" value="1"></td><td><input name="Tex25" type="text" size="2" value="1"></td></tr>
-<tr><td><input name="Tex06Nam" type="text" size="2" value="露国"></td><td><input name="Tex06" type="text" size="2" value="0"></td><td><input name="Tex16" type="text" size="2" value="3"></td><td><input name="Tex26" type="text" size="2" value="2"></td></tr>
-<tr><td><input name="Tex07Nam" type="text" size="2" value="独国"></td><td><input name="Tex07" type="text" size="2" value="0"></td><td><input name="Tex17" type="text" size="2" value="2"></td><td><input name="Tex27" type="text" size="2" value="3"></td></tr>
-<tr><td><input name="Tex08Nam" type="text" size="2" value="清国"></td><td><input name="Tex08" type="text" size="2" value="0"></td><td><input name="Tex18" type="text" size="2" value="3"></td><td><input name="Tex28" type="text" size="2" value="5"></td></tr>
-<tr><td><input name="Tex09Nam" type="text" size="2" value="×"></td><td><input name="Tex09" type="text" size="2" value="0"></td><td><input name="Tex19" type="text" size="2" value="0"></td><td><input name="Tex29" type="text" size="2" value="0"></td></tr></form></table>
+<tr><td></td><td>評価</td><td>被評価</td><td>軍事力</td><td>経済力</td></tr>
+<tr><td><input name="Tex00Nam" type="text" size="2" value="日本"></td><td><input name="Tex00" type="text" size="2" value="0"></td><td><input name="Tex10" type="text" size="2" value="0"></td><td><input name="Tex20" type="text" size="2" value="2"></td><td><input name="Tex30" type="text" size="2" value="4"></td></tr>
+<tr><td><input name="Tex01Nam" type="text" size="2" value="英国"></td><td><input name="Tex01" type="text" size="2" value="0"></td><td><input name="Tex11" type="text" size="2" value="0"></td><td><input name="Tex21" type="text" size="2" value="3"></td><td><input name="Tex31" type="text" size="2" value="7"></td></tr>
+<tr><td><input name="Tex02Nam" type="text" size="2" value="米国"></td><td><input name="Tex02" type="text" size="2" value="0"></td><td><input name="Tex12" type="text" size="2" value="0"></td><td><input name="Tex22" type="text" size="2" value="3"></td><td><input name="Tex32" type="text" size="2" value="5"></td></tr>
+<tr><td><input name="Tex03Nam" type="text" size="2" value="仏国"></td><td><input name="Tex03" type="text" size="2" value="0"></td><td><input name="Tex13" type="text" size="2" value="0"></td><td><input name="Tex23" type="text" size="2" value="3"></td><td><input name="Tex33" type="text" size="2" value="6"></td></tr>
+<tr><td><input name="Tex04Nam" type="text" size="2" value="蘭国"></td><td><input name="Tex04" type="text" size="2" value="0"></td><td><input name="Tex14" type="text" size="2" value="0"></td><td><input name="Tex24" type="text" size="2" value="2"></td><td><input name="Tex34" type="text" size="2" value="4"></td></tr>
+<tr><td><input name="Tex05Nam" type="text" size="2" value="西国"></td><td><input name="Tex05" type="text" size="2" value="0"></td><td><input name="Tex15" type="text" size="2" value="0"></td><td><input name="Tex25" type="text" size="2" value="1"></td><td><input name="Tex35" type="text" size="2" value="1"></td></tr>
+<tr><td><input name="Tex06Nam" type="text" size="2" value="露国"></td><td><input name="Tex06" type="text" size="2" value="0"></td><td><input name="Tex16" type="text" size="2" value="0"></td><td><input name="Tex26" type="text" size="2" value="3"></td><td><input name="Tex36" type="text" size="2" value="2"></td></tr>
+<tr><td><input name="Tex07Nam" type="text" size="2" value="独国"></td><td><input name="Tex07" type="text" size="2" value="0"></td><td><input name="Tex17" type="text" size="2" value="0"></td><td><input name="Tex27" type="text" size="2" value="2"></td><td><input name="Tex37" type="text" size="2" value="3"></td></tr>
+<tr><td><input name="Tex08Nam" type="text" size="2" value="清国"></td><td><input name="Tex08" type="text" size="2" value="0"></td><td><input name="Tex18" type="text" size="2" value="0"></td><td><input name="Tex28" type="text" size="2" value="3"></td><td><input name="Tex38" type="text" size="2" value="5"></td></tr>
+<tr><td><input name="Tex09Nam" type="text" size="2" value="×"></td><td><input name="Tex09" type="text" size="2" value="0"></td><td><input name="Tex19" type="text" size="2" value="0"></td><td><input name="Tex29" type="text" size="2" value="0"></td><td><input name="Tex39" type="text" size="2" value="0"></td></tr></form></table>
 
 <table border=1 style="position:absolute; top:80px;left:1150px;border-collapse:collapse;"><tr><td><form name="For05" action="#"><select name="S00" onChange="For05Sel00()">
 	<option>国軍増強
@@ -1716,11 +1791,11 @@ function HyojiKirikae() {
 	<option>各種設定
 </select></form></td></tr>
 
-<table border=1 style="position:absolute; top:120px;left:880px;border-collapse:collapse;"><tr><td><form name="For06" action="#"><textarea name="Memo00" cols=60 rows=8>改行できないZOY!!</textarea></form></td></tr>
+<table border=1 style="position:absolute; top:120px;left:940px;border-collapse:collapse;"><tr><td><form name="For06" action="#"><textarea name="Memo00" cols=50 rows=10>改行できないZOY!!</textarea></form></td></tr>
 
 <table border=1 style="position:absolute; top:80px;left:1000px;border-collapse:collapse;"><tr><td><form name="For07" action="#">石油相場<input name="Tex00" type="text" size="1" value="0"></form></td></tr>
 
-<table border=1 style="position:absolute; top:270px;left:880px;border-collapse:collapse;"><tr><td><input type="button" value="国軍増強" onclick="ComArm()"></td><td><input type="button" value="経済投資" onclick="ComEco()"></td><td><input type="button" value="外交交渉" onclick="ComDip()"></td><td><input type="button" value="砲艦外交" onclick="ComDiw()"></td><td><input type="button" value="手番終了" onclick="ComTur()"></td></tr>
+<table border=1 style="position:absolute; top:300px;left:940px;border-collapse:collapse;"><tr><td><input type="button" value="国軍増強" onclick="ComArm()"></td><td><input type="button" value="経済投資" onclick="ComEco()"></td><td><input type="button" value="外交交渉" onclick="ComDip()"></td><td><input type="button" value="砲艦外交" onclick="ComDiw()"></td><td><input type="button" value="手番終了" onclick="ComTur()"></td></tr>
 <tr><td><input type="button" value="国軍削減" onclick="ComDea()"></td><td><input type="button" value="石油購入" onclick="ComOil()"></td><td><input type="button" value="植民撤退" onclick="ComCol()"></td><td><input type="button" value="宣戦布告" onclick="ComWar()"></td><td><input type="button" value="各種設定" onclick="ComSet()"></td></tr></table>
 
 <table border=1 style="position:absolute; top:450px;left:650px;border-collapse:collapse;"><tr><td><input type="button" value="表示切替" onclick="HyojiKirikae()"></td></tr></table>
@@ -1735,7 +1810,7 @@ function HyojiKirikae() {
 <p></p>
 <p>【コマンド説明】</p>
 <p></p>
-<p>・国軍増強　資金6を消費して軍事力を+0.5します。ただし軍事力1は維持費として1920年以前のシナリオでは資金、1920年以降のシナリオでは石油0.5が必要です。</p>
+<p>・国軍増強　資金6を消費して軍事力を+0.5します。ただし軍事力1は維持費として1920年以前のシナリオでは資金0.5、1920年以降のシナリオでは石油0.5が必要です。</p>
 <p></p>
 <p>・国軍削減　軍事力を-0.5します。</p>
 <p></p>
@@ -1743,11 +1818,11 @@ function HyojiKirikae() {
 <p></p>
 <p>・石油購入　国際市場から石油を購入します。資金1で購入できる石油の量は、自国が抑えている油田の生産力、産油国との関係性により変化します。石油は1920年以前のシナリオでは使用しません。</p>
 <p></p>
-<p>・外交交渉　対象国との関係性を増加させます。自国の軍事が高いほど効果も高くなります。外交交渉と砲艦外交は1ターンに1度しか実行できません。</p>
+<p>・外交交渉　対象国の自国に対する評価を改善します。自国の軍事が高いほど効果も高くなります。外交交渉と砲艦外交は1ターンに1度しか実行できません。</p>
 <p></p>
 <p>・植民撤退　非列強国(後述)から手を引きます。関係性が0になります。</p>
 <p></p>
-<p>・砲艦外交　対象国との関係性を減少させます。自国の軍事が高いほど効果が低くなります。外交交渉と砲艦外交は1ターンに1度しか実行できません。</p>
+<p>・砲艦外交　我が国の対象国に対する評価を悪化させます。自国の軍事が高いほど効果が低くなります。外交交渉と砲艦外交は1ターンに1度しか実行できません。</p>
 <p></p>
 <p>・宣戦布告　対象国に対して、こちらから戦争を始めます。戦争は列強国(後述)としか行えません。</p>
 <p></p>
@@ -1761,25 +1836,27 @@ function HyojiKirikae() {
 <p></p>
 <p>列強国は外交交渉により、非列強国を保護国にすることができます。保護国を持つ列強国は、保護国の経済力と石油生産力の半分を自国の収入とすることができます。</p>
 <p></p>
+<p>また、既に自国の保護下にある非列強国に対して関係改善を行うことで、他の列強国が自国の保護国に対して影響力を高めるのを防ぐことができます。</p>
+<p></p>
 <p>【戦争】</p>
 <p></p>
-<p>プレイヤーは関係性が0以下の国家に対して宣戦布告することができます。宣戦布告には軍事力と同等の資金を必要とします。(防衛戦争には資金は不要です)</p>
+<p>プレイヤーは自国からの評価が0以下の国家に対して宣戦布告することができます。宣戦布告には軍事力と同等の資金を必要とします。(防衛戦争には資金は不要です)</p>
 <p></p>
-<p>戦争の勝敗は、相手国の軍隊をより多く撃破した国が勝利します(残りの軍事力にかかわらず)。軍の攻撃力は、軍事力のおよそ4分の1ですが、これにはランダム要素があります。</p>
+<p>戦争の勝敗は、相手国の軍隊をより多く撃破した国が勝利します(残りの軍事力に関わらず)。軍の攻撃力は、軍事力のおよそ4分の1ですが、これにはランダム要素があります。</p>
 <p></p>
 <p>・外交への影響</p>
 <p></p>
-<p>正当性のない宣戦布告(関係性が高い国家に宣戦布告)は他の列強と自国の関係を悪化させ、また列強AIは関係性の高い列強が攻撃されると激怒します。</p>
+<p>正当性のない宣戦布告(自国からの評価が高い国家への宣戦布告)は他の列強に自国を警戒させ、また列強AIは評価の高い列強が攻撃されると激怒します。</p>
 <p></p>
 <p>これは宣戦布告を行った国が勝利した場合のみに適用されます。宣戦布告を受けた国が勝利した場合は正当防衛とみなされ、外交関係の悪化は起こりません。</p>
 <p></p>
-<p>また、戦争に敗れた国家は、保護国への影響力が低下します。</p>
+<p>また、戦争に敗れた国家は、保護国への影響力が失われます。</p>
 <p></p>
 <p>【海域】</p>
 <p></p>
 <p>海域を支配することは、非列強国への自国の影響力を高めることに役立ちます。海域へ影響力を高めるには、強力な艦隊を保有する以外にも、海域に隣接する拠点を抑えることが重要です。制海権の計算はターン更新時のみに行われます。</p>
 <p></p>
-<p>【そのほか詳細】</p>
+<p>【その他詳細】</p>
 <p></p>
 <p>・資金は経済力の3倍、石油は4倍まで備蓄できます。備蓄限界を超えた分はターン更新時に破棄されます。ちなみにターン更新時の処理順は、収入→維持費支払い→備蓄計算です。</p>
 <p></p>
@@ -1792,8 +1869,7 @@ function HyojiKirikae() {
 <p></p>
 <p>・旗をダブルクリックすることで、右上の選択欄で指定しているコマンドを実行できます。</p>
 <p></p>
-<p>・AIはチートしてる？→基本的にはしてません。ただしAIは宣戦布告時に資金を消費しないのと、非列強国への影響力拡大行動はプレイヤーと計算式が異なります。</p>
-<p>(ただし、後者に関してはAIが特別有利というわけでもありません)。</p></td></tr></table>
+<p>・AIはチートしてる？→基本的にはしてません。ただしAIは宣戦布告時に資金を消費しないのと、非列強国への影響力拡大行動はプレイヤーと計算式が異なります。</p></td></tr></table>
 
 </body>
 </html>
