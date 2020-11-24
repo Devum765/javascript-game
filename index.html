@@ -150,7 +150,7 @@ function Keisan() {
 	}
 	<!--シナリオ固有-->
 	if (Scenario==0)  { NationEco[2] += 5; NationEco[3] += 4; NationEco[6] += 1; NationEco[7] += 3; NationEco[8] *= 0.4; NationEco[8] = Math.round(NationEco[8]*10)/10; }
-	if (Scenario==41) { NationEco[1] += 2; NationEco[6] *= 0.7; NationEco[6] = Math.round(NationEco[6]*10)/10; if (Event01==1) { NationEco[1] += 4; } }
+	if (Scenario==41) { NationEco[1] += 2; NationEco[6] *= 0.7; NationEco[6] = Math.round(NationEco[6]*10)/10; if (Event01==1) { NationEco[1] += 6; } if (Event03==1) { NationEco[5] += 2; } }
 	if (Scenario==40) { NationEco[2] += 4; NationEco[8] *= 0.6; NationEco[8] = Math.round(NationEco[8]*10)/10; }
 }
 
@@ -1082,8 +1082,8 @@ function Event() {
 					Event00=1;
 			}
 			if (NationHoy[1]<=2 && NationHoy[1]>=1 && Event01==0) {
-					alert("アメリカにおいて「リメンバーパールハーバー」が発生しました。\nアメリカの経済力に+4の変化");
-					NationEco[1]+=4;
+					alert("アメリカにおいて「リメンバーパールハーバー」が発生しました。\nアメリカの経済力に+6の変化");
+					NationEco[1]+=6;
 					Event01=1;
 			}
 			if (YearNum==1938 && NationHoy[0]>=1 && Event02==0) {
