@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>アジア新時代</title>
+<title>アジア新時代 ver1.24</title>
 </head>
 <body>
 
@@ -19,6 +19,7 @@ var Settei01 = 0;
 var Settei02 = 0;
 var HyojiKirikaeNum = 0;
 var Season = 0;
+var PlayerTurn = 0;
 
 var AIDipMisc = 40;<!--脅威度がこの値より小さいとき、AIは植民地拡大や宣戦布告を行い、大きいときは列強との融和政策に走る-->
 var WarJudgeMil = 1.35;<!--仮想敵国より戦力が1.25倍の時、宣戦布告する-->
@@ -167,7 +168,7 @@ function OilKonyuCom() {
 	}
 	OilKonyuNum += NationOil[PlayNation]/2;
 	OilKonyuNum = Math.round(OilKonyuNum*10)/10;
-	document.For07.Tex00.defaultValue = OilKonyuNum;
+	document.For01.Tex04.defaultValue = OilKonyuNum;
 }
 
 <!--【コマンド切り替え()】-->
@@ -469,7 +470,7 @@ function For05Sel00_() {
 			if (Scenario>=10) { document.For06.Memo00.defaultValue = "国家の軍事力を増強します。(必要資金"+BuildArm+"で上昇量0.5)\n軍事力１の維持には0.5の石油を必要とします。"; } break;
 		case 1: if (Scenario<10)  { document.For06.Memo00.defaultValue = "国家の軍事力を0.5削減します。\n軍事力１の維持には0.5の経済力を必要とします。" }
 			if (Scenario>=10) { document.For06.Memo00.defaultValue = "国家の軍事力を0.5削減します。\n軍事力１の維持には0.5の石油を必要とします。"; } break;
-		case 2: document.For06.Memo00.defaultValue = "国費で自国の経済に投資を行います。(自由経済国家では減税を行い経済を活性化させます)(必要資金"+BuildEco+"で上昇量0.5)"; break;
+		case 2: document.For06.Memo00.defaultValue = "国費で自国の経済に投資を行います。(必要資金"+BuildEco+"で上昇量0.5)"; break;
 		case 3: if (Scenario<10)  { document.For06.Memo00.defaultValue = "1920年以前のシナリオでは石油の概念は登場しません。"; }
 			if (Scenario>=10) { document.For06.Memo00.defaultValue = "国際市場から石油を購入します。(必要資金1で石油"+OilKonyuNum+")\n資金1で購入できる石油の量は、自国が抑えている油田の生産力、産油国との関係性により変化します。"; } break;
 		case 4: document.For06.Memo00.defaultValue = "対象国との関係性を改善します。効果は、対象との軍事力比に依存します。1年に1度だけ行えます。"; break;
@@ -842,7 +843,12 @@ function War() {
 		}
 		for (HenA=0;HenA<=9;HenA++) {
 			if (NationKan[HenA][VicNation]<-50) {
-			NationKan[HenA][VicNation]=-50;
+				NationKan[HenA][VicNation]=-50;
+			}
+		}
+		for (HenA=0;HenA<=9;HenA++) {
+			if (NationHoy[HenA]==0) {
+				NationKan[HenA][VicNation]=0;
 			}
 		}
 	}
@@ -887,17 +893,19 @@ function PaceTalk() {
 		}
 		alert(NationNam[LosNation]+"は東アジアにけるすべての領土を喪失しました");
 		if (LosNation==PlayNation) { alert("ゲーム終了です"); GameNum = 99; }
-		Victory=0;
-		for (HenA=0;HenA<=9;HenA++) {
-			if (HenA!=PlayNation) {
-				if (NationHoy[HenA]==0) {
-					Victory++;
+		if (GameNum!=99) {
+			Victory=0;
+			for (HenA=0;HenA<=9;HenA++) {
+				if (HenA!=PlayNation) {
+					if (NationHoy[HenA]==0) {
+						Victory++;
+					}
 				}
 			}
-		}
-		if (Victory==9) {
-			alert("すべての列強国を東アジアから追い出すことに成功しました\nゲーム終了です");
-			GameNum=99;
+			if (Victory==9) {
+				alert("すべての列強国を東アジアから追い出すことに成功しました\nゲーム終了です");
+				GameNum=99;
+			}
 		}
 	}
 	if (NationHoy[LosNation]>=2) {<!--敗北した国の所有している領土が2つ以上-->
@@ -1222,7 +1230,7 @@ function ComDip() {
 					}
 					alert(NationNam[HenA]+"の我が国に対する評価が"+NationKan[HenA][PlayNation]+"になりました。");
 				}
-				if (NationInd[HenA]!=98) {<!--非列強・独立国-->
+				if (NationInd[HenA]!=98 && NationInd[HenA]!=97) {<!--非列強・独立国-->
 					if (NationKai[HenA]==1) { HenB = NationKan[PlayNation][NationKai1[HenA]]; }
 					if (NationKai[HenA]==2) { HenB = (NationKan[PlayNation][NationKai1[HenA]]+NationKan[PlayNation][NationKai2[HenA]])/2; }
 					NationKan[PlayNation][HenA] += Math.round((NationArm[PlayNation]+HenB)/NationArm[HenA]);
@@ -1370,6 +1378,7 @@ function ComTur() {
 }
 
 function ComTurAct() {
+	PlayerTurn=1;
 	switch (PlayNation) {
 		case 0: AI01(); AI02(); AI03(); AI04(); AI05(); AI06(); AI07(); AI08(); AI09(); break;
 		case 1: AI02(); AI03(); AI04(); AI05(); AI06(); AI07(); AI08(); AI09(); break;
@@ -1472,7 +1481,8 @@ function ComTurAct() {
 			GameNum=99;
 		}
 		Keisan()
-		for (HenA=0;HenA<=9;HenA++) {<!--制海権計算-->
+		<!--制海権計算-->
+		for (HenA=0;HenA<=9;HenA++) {
 			if (AreaShi[0]==HenA || AreaShi[1]==HenA) { NationKan[HenA][1000]=Math.round(NationArm[HenA]*4); }
 			if (AreaShi[0]!=HenA && AreaShi[1]!=HenA) { NationKan[HenA][1000]=Math.round(NationArm[HenA]); }
 			if (AreaShi[1]==HenA || AreaShi[2]==HenA || AreaShi[3]==HenA || AreaShi[4]==HenA || AreaShi[5]==HenA || AreaShi[11]==HenA) { NationKan[HenA][1001]=Math.round(NationArm[HenA]*4); }
@@ -1554,6 +1564,7 @@ function ComTurAct() {
 		Oil = Math.round(Oil*10)/10;
 		document.For01.Tex03.defaultValue = Oil;
 		<!--プレイヤー用ターン更新コマンド-->
+		PlayerTurn=0;
 		KanKai=0;
 		Area()
 	}
@@ -1609,7 +1620,7 @@ function Kettei() {
 				document.getElementById("Area_"+AreaNam[AreaNum]+"_png").src=NationHata[PlayNation];
 				NationHoy[PlayNation] ++;
 				NationHoy[LosNation] --;
-				if (NationHoy[LosNation]==0) {
+				if (NationHoy[LosNation]==0) {<!--領土0の場合は領土選択画面に来ないので、実質無意味-->
 					alert(NationNam[LosNation]+"は東アジアにおけるすべての領土を喪失しました"); NationArm[LosNation] = 0; NationArm[LosNation] = 0;
 				}
 				Keisan()
@@ -1634,7 +1645,7 @@ function Kettei() {
 			case 3:<!--石油購入-->
 				ComOil()
 			break;
-			case 4:<!--関係改善-->
+			case 4:<!--外交交渉-->
 				ComDip()
 			break;
 			case 5:<!--植民撤退-->
@@ -1707,7 +1718,9 @@ function Kettei() {
 	}
 	if (GameNum==98) {
 		GameNum = 1;
-		ComTurAct()
+		if (PlayerTurn==1) {
+			ComTurAct()
+		}
 	}
 }
 
@@ -1776,10 +1789,10 @@ function HyojiKirikae() {
 <table border=1 style="position:absolute; top:0px;left:650px;border-collapse:collapse;"><tr><td><form name="For00" action="#"><select name="S00" onChange="For00Sel00()">
 	<option>帝国主義全盛(1886年)
 	<option>軍靴の足音(1936年)
-</select></form></td><td><form name="For01" action="#"><input name="Tex00" type="text" size="1" value="1886">年</td><td><input name="Tex01" type="text" size="1" value="前期"></td><td><input type="button" value="決定" onclick="Kettei()"></td><td>資金<input name="Tex02" type="text" size="1" value="0"></td><td>備蓄石油<input name="Tex03" type="text" size="1" value="0"></form></tr></table>
+</select></form></td><td><form name="For01" action="#"><input name="Tex00" type="text" size="1" value="1886">年</td><td><input name="Tex01" type="text" size="1" value="前期"></td><td><input type="button" value="決定" onclick="Kettei()"></td><td>資金<input name="Tex02" type="text" size="1" value="0"></td><td>備蓄石油<input name="Tex03" type="text" size="1" value="0"></td><td>石油相場<input name="Tex04" type="text" size="1" value="0"></form></tr></table>
 
 <table border=1 style="position:absolute; top:40px;left:650px;border-collapse:collapse;">
-<tr><td><form name="For02" action="#"><input name="Tex00" type="text" size="9" value="大日本帝国"></td><td>経済<input name="Tex01" type="text" size="2" value="4"></td><td>石油<input name="Tex02" type="text" size="2" value="0"></td><td>軍事力<input name="Tex03" type="text" size="2" value="2"></td><td>状態<input name="Tex05" type="text" size="4" value="列強"></form></td></tr></table>
+<form name="For02" action="#"><tr><td>国家名<input name="Tex00" type="text" size="9" value="大日本帝国"></td><td>経済<input name="Tex01" type="text" size="2" value="4"></td><td>石油<input name="Tex02" type="text" size="2" value="0"></td><td>軍事力<input name="Tex03" type="text" size="2" value="2"></td><td>状態<input name="Tex05" type="text" size="4" value="列強"></form></td></tr></table>
 
 <table border=1 style="position:absolute; top:80px;left:650px;border-collapse:collapse;"><form name="For03" action="#"><tr><td>地域名<input name="Tex00" type="text" size="11" value="日本"></td><td>経済<input name="Tex01" type="text" size="2" value="4"></td><td>石油<input name="Tex02" type="text" size="2" value="0"></form></td></tr></table>
 
@@ -1796,7 +1809,7 @@ function HyojiKirikae() {
 <tr><td><input name="Tex08Nam" type="text" size="2" value="清国"></td><td><input name="Tex08" type="text" size="2" value="0"></td><td><input name="Tex18" type="text" size="2" value="0"></td><td><input name="Tex28" type="text" size="2" value="3"></td><td><input name="Tex38" type="text" size="2" value="5"></td></tr>
 <tr><td><input name="Tex09Nam" type="text" size="2" value="×"></td><td><input name="Tex09" type="text" size="2" value="0"></td><td><input name="Tex19" type="text" size="2" value="0"></td><td><input name="Tex29" type="text" size="2" value="0"></td><td><input name="Tex39" type="text" size="2" value="0"></td></tr></form></table>
 
-<table border=1 style="position:absolute; top:80px;left:1150px;border-collapse:collapse;"><tr><td><form name="For05" action="#"><select name="S00" onChange="For05Sel00()">
+<table border=1 style="position:absolute; top:40px;left:1185px;border-collapse:collapse;"><tr><td><form name="For05" action="#"><select name="S00" onChange="For05Sel00()">
 	<option>国軍増強
 	<option>国軍削減
 	<option>経済投資
@@ -1810,8 +1823,6 @@ function HyojiKirikae() {
 </select></form></td></tr>
 
 <table border=1 style="position:absolute; top:120px;left:940px;border-collapse:collapse;"><tr><td><form name="For06" action="#"><textarea name="Memo00" cols=50 rows=10>改行できないZOY!!</textarea></form></td></tr>
-
-<table border=1 style="position:absolute; top:80px;left:1000px;border-collapse:collapse;"><tr><td><form name="For07" action="#">石油相場<input name="Tex00" type="text" size="1" value="0"></form></td></tr>
 
 <table border=1 style="position:absolute; top:300px;left:940px;border-collapse:collapse;"><tr><td><input type="button" value="国軍増強" onclick="ComArm()"></td><td><input type="button" value="経済投資" onclick="ComEco()"></td><td><input type="button" value="外交交渉" onclick="ComDip()"></td><td><input type="button" value="砲艦外交" onclick="ComDiw()"></td><td><input type="button" value="手番終了" onclick="ComTur()"></td></tr>
 <tr><td><input type="button" value="国軍削減" onclick="ComDea()"></td><td><input type="button" value="石油購入" onclick="ComOil()"></td><td><input type="button" value="植民撤退" onclick="ComCol()"></td><td><input type="button" value="宣戦布告" onclick="ComWar()"></td><td><input type="button" value="各種設定" onclick="ComSet()"></td></tr></table>
@@ -1854,7 +1865,7 @@ function HyojiKirikae() {
 <p></p>
 <p>列強国は外交交渉により、非列強国を保護国にすることができます。保護国を持つ列強国は、保護国の経済力と石油生産力の半分を自国の収入とすることができます。</p>
 <p></p>
-<p>また、既に自国の保護下にある非列強国に対して関係改善を行うことで、他の列強国が自国の保護国に対して影響力を高めるのを防ぐことができます。</p>
+<p>また、既に自国の保護下にある非列強国に対して外交交渉を行うことで、他の列強国が自国の保護国に対して影響力を高めるのを防ぐことができます。</p>
 <p></p>
 <p>【戦争】</p>
 <p></p>
