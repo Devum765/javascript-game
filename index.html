@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>アジア新時代 ver1.24</title>
+<title>アジア新時代 ver1.25</title>
 </head>
 <body>
 
 <script>
+
+<!--【備忘録】シナリオ41はヒストリカル志向ではなく、石油概念を追加された外交ゲームとして設計-->
 
 <!--【初期設定】-->
 GameNum = 0;//0=シナリオ・国家選択、1=ゲーム進行中、2=講和会議、99=ゲーム終了
@@ -151,7 +153,7 @@ function Keisan() {
 	}
 	<!--シナリオ固有-->
 	if (Scenario==0)  { NationEco[2] += 5; NationEco[3] += 4; NationEco[6] += 1; NationEco[7] += 3; NationEco[8] *= 0.4; NationEco[8] = Math.round(NationEco[8]*10)/10; }
-	if (Scenario==41) { NationEco[1] += 2; NationOil[5] += 2; NationEco[6] *= 0.7; NationEco[6] = Math.round(NationEco[6]*10)/10; if (Event01==1) { NationEco[1] += 6; } if (Event03==1) { NationEco[5] += 2; NationOil[5] += 4; } }
+	if (Scenario==41) { NationEco[1] += 4; NationOil[5] += 2; NationEco[6] *= 0.6; NationEco[6] = Math.round(NationEco[6]*10)/10; if (Event01==1) { NationEco[1] += 3; } if (Event03==1) { NationEco[5] += 4; NationOil[5] += 4; } }
 	if (Scenario==40) { NationEco[2] += 4; NationEco[8] *= 0.6; NationEco[8] = Math.round(NationEco[8]*10)/10; }
 }
 
@@ -191,7 +193,7 @@ function For00Sel00() {
 				if (first==1) {
 					document.For01.Tex00.defaultValue = YearNum;
 					document.For01.Tex01.defaultValue = "前期";
-					document.For06.Memo00.defaultValue = "清仏戦争の翌年から第一次世界大戦の勃発までの、アジアにおける帝国主義の全盛期を扱うシナリオです。\n石油・政治体制の概念がなくルールがシンプルなため、初心者におススメです。\nプレイ可能国家(列強国)は日本・イギリス・アメリカ・フランス・オランダ・スペイン・ドイツ・清です。\nゲーム開始年：1886年　ゲーム終了年：1914年　1年＝2ターン";
+					document.For06.Memo00.defaultValue = "清仏戦争の翌年から第一次世界大戦の勃発までの、アジアにおける帝国主義の全盛期を扱うシナリオです。\n石油の概念がなくルールがシンプルなため、初心者におススメです。\nプレイ可能国家(列強国)は日本・イギリス・アメリカ・フランス・オランダ・スペイン・ドイツ・清です。\nゲーム開始年：1886年　ゲーム終了年：1914年　1年＝2ターン";
 					document.For04.Tex00Nam.defaultValue = "日本";
 					document.For04.Tex01Nam.defaultValue = "英国";
 					document.For04.Tex02Nam.defaultValue = "米国";
@@ -270,7 +272,7 @@ function For00Sel00() {
 				document.For01.Tex00.defaultValue = YearNum;
 				SeasonNum = 4;
 				document.For01.Tex01.defaultValue = "春";
-				document.For06.Memo00.defaultValue = "日中戦争がはじまる前年の1936年から朝鮮戦争が始まる1950年までを扱うシナリオです。\n石油と政治体制の追加ルールがあります。\nプレイ可能国家(列強国)は、日本・アメリカ・イギリス・フランス・オランダ・ソ連・中国国民党です。\nゲーム開始年：1936年　ゲーム終了年：1950年　1年＝4ターン";
+				document.For06.Memo00.defaultValue = "日中戦争がはじまる前年の1936年から朝鮮戦争が始まる1950年までを扱うシナリオです。\n石油の追加ルールがあります。\nプレイ可能国家(列強国)は、日本・アメリカ・イギリス・フランス・オランダ・ソ連・中国国民党です。\nゲーム開始年：1936年　ゲーム終了年：1950年　1年＝4ターン\n(ゲームの仕様上、ヒストリカルな展開にはなりません)";
 				document.For04.Tex00Nam.defaultValue = "日本";
 				document.For04.Tex01Nam.defaultValue = "米国";
 				document.For04.Tex02Nam.defaultValue = "英国";
@@ -285,19 +287,19 @@ function For00Sel00() {
 
 				//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義)、5保有領土数、6状態(0日本傀儡、98列強、99独立)
 				//8=列強0との関係値、14旗、15本土、16接続海域数、17接続海域(1)、18接続海域(2)
-				NationArr[ 0] = new Array("大日本帝国",0,0,4,1,3,98,0,0,0,0,0,0,0,0,0,0,"日本.png",1,0,0,0);
-				NationArr[ 1] = new Array("アメリカ合衆国",0,0,3,1,3,98,0,0,0,0,0,0,0,0,0,0,"アメリカ.png",19,0,0,0);
-				NationArr[ 2] = new Array("大英帝国",0,0,3,1,5,98,0,0,0,0,0,0,0,0,0,0,"イギリス.png",18,0,0,0);
+				NationArr[ 0] = new Array("大日本帝国",0,0,5,1,3,98,0,0,0,0,0,0,0,0,0,0,"日本.png",1,0,0,0);
+				NationArr[ 1] = new Array("アメリカ合衆国",0,0,4,1,3,98,0,0,0,0,0,0,0,0,0,0,"アメリカ.png",19,0,0,0);
+				NationArr[ 2] = new Array("大英帝国",0,0,4,1,5,98,0,0,0,0,0,0,0,0,0,0,"イギリス.png",18,0,0,0);
 				NationArr[ 3] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
-				NationArr[ 4] = new Array("オランダ王国",0,0,2,1,2,98,0,0,0,0,0,0,0,0,0,0,"オランダ.png",99,0,0,0);
+				NationArr[ 4] = new Array("オランダ王国",0,0,3,1,2,98,0,0,0,0,0,0,0,0,0,0,"オランダ.png",99,0,0,0);
 				NationArr[ 5] = new Array("ソビエト連邦",0,0,1,1,1,98,0,0,0,0,0,0,0,0,0,0,"ソ連.png",0,0,0,0);
-				NationArr[ 6] = new Array("中国(国民党)",0,0,3,1,2,98,0,0,0,0,0,0,0,0,0,0,"国民党.png",4,0,0,0);
+				NationArr[ 6] = new Array("中国(国民党)",0,0,3,1,3,98,0,0,0,0,0,0,0,0,0,0,"国民党.png",6,0,0,0);
 				NationArr[ 7] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 				NationArr[ 8] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 				NationArr[ 9] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 
 				NationArr[10] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
-				NationArr[11] = new Array("中国(軍閥)",0,0,2,1,1,6,0,0,0,0,0,0,0,0,0,0,"中華民国.png",99,1,1001,0);
+				NationArr[11] = new Array("中国(軍閥)",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"中華民国.png",99,0,0,0);
 				NationArr[12] = new Array("仏領インドシナ",0,0,2,1,2,99,0,0,0,0,0,0,0,0,0,0,"仏領インドシナ.png",99,0,0,0);
 				NationArr[13] = new Array("タイ",0,0,1,1,1,99,0,0,0,0,0,0,0,0,0,0,"タイ.png",99,1,1002,0);
 				NationArr[14] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
@@ -320,9 +322,9 @@ function For00Sel00() {
 				AreaArr[ 1] = new Array("日本",4,0,0,5,1);
 				AreaArr[ 2] = new Array("朝鮮",2,0,0,2,1);
 				AreaArr[ 3] = new Array("満州",1,2,0,2,2);
-				AreaArr[ 4] = new Array("北京",2,0,11,3,2);
-				AreaArr[ 5] = new Array("上海",2,0,6,3,2);
-				AreaArr[ 6] = new Array("広州",2,0,6,3,2);
+				AreaArr[ 4] = new Array("北京",3,0,6,3,2);
+				AreaArr[ 5] = new Array("上海",3,0,6,3,2);
+				AreaArr[ 6] = new Array("広州",3,0,6,3,2);
 				AreaArr[ 7] = new Array("南洋諸島",0,0,1,0,0);
 				AreaArr[ 8] = new Array("ハノイ",1,0,12,3,3);
 				AreaArr[ 9] = new Array("サイゴン",1,0,12,3,3);
@@ -1091,23 +1093,37 @@ function Event() {
 				NationKan[4][0]=15;
 				Event00=1;
 			}
-			if (NationHoy[1]<=2 && NationHoy[1]>=1 && Event01==0) {
-				alert("アメリカにおいて「リメンバーパールハーバー」が発生しました。\nアメリカの軍事力に+4の変化\nアメリカの経済力に+6の変化");
+			if ( (NationHoy[1]>=1 && Event01==0) && ( (NationHoy[1]<=2) || (YearNum==1942) ) ) {
+				alert("アメリカにおいて「戦時体制へ突入した」が発生しました。\nアメリカの軍事力に+4の変化\nアメリカの経済力に+3の変化");
 				NationArm[1]+=4;
-				NationEco[1]+=6;
+				NationEco[1]+=3;
 				Event01=1;
 			}
-			if (YearNum==1938 && NationHoy[0]>=1 && Event02==0) {
-				alert("日本において「国家総動員法」が発生しました。\n日本の経済力に+1の変化");
+			if (YearNum==1938 && NationHoy[0]>=1 && Event02==1) {<!--停止中-->
+				alert("日本において「国家総動員法」が発生しました。\nエリア・日本の経済力に+1の変化");
 				AreaEco[1]+=1;
 				Event02=1;
 			}
 			if (YearNum==1945 && NationHoy[5]>=1 && Event03==0) {
-				alert("ソビエトにおいて「欧州戦線の終結」が発生しました。\nソビエトの軍事力に+4の変化\nソビエトの経済力に+2の変化\nソビエトの石油生産に+4の変化");
-				NationArm[5]+=4;
-				NationEco[5]+=2;
+				alert("ソビエトにおいて「欧州戦線の終結」が発生しました。\nソビエトの軍事力に+8の変化\nソビエトの経済力に+4の変化\nソビエトの石油生産に+4の変化");
+				NationArm[5]+=8;
+				NationEco[5]+=4;
 				NationOil[5]+=4;
 				Event03=1;
+			}
+			if (NationHoy[1]>=1 && NationArm[1]<3 && Event01==1) {
+				alert("アメリカにおいて「太平洋方面の戦力増強」が発生しました。\nアメリカの軍事力を3に設定");
+				NationArm[1]=3;
+			}
+			if (YearNum==1937 && NationHoy[1]>=1 && NationHoy[6]>=1 && AreaShi[5]==6 && Event04==1) {<!--停止中-->
+				alert("日本において「北支事変」が発生しました。\nエリア・北京を日本が支配します\nアメリカ・イギリス・オランダ・中国の日本に対する評価に-25の変化");
+				AreaShi[4]=0;
+				NationKan[1][0]-=25;
+				NationKan[2][0]-=25;
+				NationKan[4][0]-=25;
+				NationKan[6][0]-=25;
+				document.getElementById("Area_"+AreaNam[4]+"_png").src=NationHata[0];
+				Event04=1;
 			}
 			if (NationHoy[0]>=1) {
 				if (NationHoy[1]>=1) { NationKan[1][0]-=1; }
@@ -1546,16 +1562,14 @@ function ComTurAct() {
 		}
 		if (Settei02==01) {
 			while (Oil<NationArm[PlayNation]) {
-				if (Money>0) {
+				if (Money<1) {
+					alert("資金不足により石油購入が停止されました\n再度、石油購入を自動化する場合はもう一度各種設定で指定してください");
+					Settei02=0;
+					break;
+				}
+				if (Money>=0) {
 					Money--;
 					Oil+=OilKonyuNum;
-				}
-				if (Money<=0) {
-					Money = 0;
-					NationArm[PlayNation] -= 0.5;
-					alert("石油不足により軍の戦力が低下しています");
-					Oil = 0;
-					break;
 				}
 			}
 		}
@@ -1566,7 +1580,7 @@ function ComTurAct() {
 		<!--プレイヤー用ターン更新コマンド-->
 		PlayerTurn=0;
 		KanKai=0;
-		Area()
+		HomeLandHyouji()
 	}
 	if (GameNum==1) {
 		Event()
@@ -1612,7 +1626,7 @@ function Kettei() {
 			alert("戦争で戦った相手国の領土を指定してください");
 		}
 		if (AreaShi[AreaNum]==LosNation) {
-			if ((NationHoy[VicNation]!=1) && (AreaNum==NationHon[VicNation])) {
+			if ((NationHoy[VicNation]!=1) && (AreaNum==NationHon[LosNation])) {
 				alert("植民地を保有している国の本国は要求できません");
 			}
 			if ((NationHoy[LosNation]==1) || (AreaNum!=NationHon[LosNation])) {
@@ -1832,7 +1846,6 @@ function HyojiKirikae() {
 <script>window.document.For06.Memo00.defaultValue = "清仏戦争の翌年から第一次世界大戦の勃発までの、アジアにおける帝国主義の全盛期を扱うシナリオです。\n石油・政治体制の概念がなくルールがシンプルなため、初心者におススメです。\nプレイ可能国家(列強国)は日本・イギリス・アメリカ・フランス・オランダ・スペイン・ドイツ・清です。\nゲーム開始年：1886年　ゲーム終了年：1914年　1年＝2ターン";</script>
 
 <table border=1 style="position:absolute; top:650px;left:0px;border-collapse:collapse;"><tr><td>【ゲームの目的】　東アジアで自国の植民地を拡大する
-
 <p>【ゲーム終了条件】　自国の領土が無くなる(滅亡)、1914年になる(時間切れ)</p>
 <p></p>
 <p>【1プレイ時間】　5分</p>
