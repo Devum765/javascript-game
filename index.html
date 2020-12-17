@@ -836,17 +836,19 @@ function AIact() {
 					HenC=0;
 					for (HenA=0;HenA<=9;HenA++) {
 						if (AI!=HenA) {
-							if (HenC==0) {
-								if (NationArm[HenA]*2<NationArm[AI]) {
-									if (NationKan[AI][HenA]<=0) {
-										if (Math.random()>WarJudgeRan) {
-											<!--戦争-->
-											WarA = AI; WarD= HenA;
-											War()
-											HenC=1;
+							if (NationHoy[HenA]>0) {
+								if (HenC==0) {
+									if (NationArm[HenA]*2<NationArm[AI]) {
+										if (NationKan[AI][HenA]<=0) {
+											if (Math.random()>WarJudgeRan) {
+												<!--戦争-->
+												WarA = AI; WarD= HenA;
+												War()
+												HenC=1;
+											}
 										}
 									}
-								}
+								
 							}
 						}
 					}
