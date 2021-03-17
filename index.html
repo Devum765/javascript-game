@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>アジア新時代 ver2.00</title>
+<title>アジア新時代 ver2.01</title>
 </head>
 <body>
 
@@ -43,7 +43,7 @@
 
 <!--【初期設定】-->
 GameNum = 0;//0=シナリオ・国家選択、1=ゲーム進行中、2=講和会議、99=ゲーム終了
-AreaNum = 1;//初期状態でエリア・日本を選択
+AreaNum = 0;//初期状態でエリア・ウラジオストックを選択
 var Money = 0;
 var Oil = 0;
 var KanKai = 0;
@@ -554,6 +554,8 @@ function For05Sel00_() {
 
 <!--【地域指定()】-->
 function Area() {
+	if (AreaNum<1000) { document.For08.S00.selectedIndex=AreaNum; }
+	if (AreaNum>=1000) { document.For08.S00.selectedIndex=AreaNum-980; }
 	HenA = AreaShi[AreaNum];
 	document.For02.Tex00.defaultValue = NationNam[HenA];
 	document.For02.Tex01.defaultValue = NationEco[HenA];
@@ -716,6 +718,12 @@ function Area() {
 		document.For07.Memo00.defaultValue = "中立条約を締結できるのは列強国のみです";
 	}
 	HyoujiKirikaeHon()
+}
+
+function For08Sel00() {
+	AreaNum = document.For08.S00.selectedIndex;
+	if (document.For08.S00.selectedIndex>=20) { AreaNum+=980; }
+	Area()
 }
 
 <!--【AIデータ】-->
@@ -1904,7 +1912,7 @@ function ComSet() {
 		Settei00=0;
 	}
 	Settei01=0;
-	if (window.confirm("外交交渉及び砲艦外交コマンドを実行すると自動的に手番を終了する(デフォルト)。\nOK→自動化\nキャンセル→無効化")) {
+	if (window.confirm("外交交渉及び砲艦外交コマンドを実行すると自動的に手番を終了する。\nOK→自動化(デフォルト)\nキャンセル→無効化")) {
 		Settei01=1;
 	}
 	Settei02=0;
@@ -2123,9 +2131,9 @@ function HyojiKirikae() {
 </select></form></td><td><form name="For01" action="#"><input name="Tex00" type="text" size="1" value="1886">年</td><td><input name="Tex01" type="text" size="1" value="前期"></td><td><input type="button" value="決定" onclick="Kettei()"></td><td>資金<input name="Tex02" type="text" size="1" value="0"></td><td>備蓄石油<input name="Tex03" type="text" size="1" value="0"></td><td>石油相場<input name="Tex04" type="text" size="1" value="0"></form></tr></table>
 
 <table border=1 style="position:absolute; top:40px;left:650px;border-collapse:collapse;">
-<form name="For02" action="#"><tr><td>国家名<input name="Tex00" type="text" size="9" value="大日本帝国"></td><td>経済<input name="Tex01" type="text" size="2" value="4"></td><td>石油<input name="Tex02" type="text" size="2" value="0"></td><td>軍事力<input name="Tex03" type="text" size="2" value="3"></td><td>状態<input name="Tex05" type="text" size="4" value="列強"></form></td></tr></table>
+<form name="For02" action="#"><tr><td>国家名<input name="Tex00" type="text" size="9" value="ロシア帝国"></td><td>経済<input name="Tex01" type="text" size="2" value="3"></td><td>石油<input name="Tex02" type="text" size="2" value="0"></td><td>軍事力<input name="Tex03" type="text" size="2" value="3"></td><td>状態<input name="Tex05" type="text" size="4" value="列強"></form></td></tr></table>
 
-<table border=1 style="position:absolute; top:80px;left:650px;border-collapse:collapse;"><form name="For03" action="#"><tr><td>地域名<input name="Tex00" type="text" size="11" value="日本"></td><td>経済<input name="Tex01" type="text" size="2" value="4"></td><td>石油<input name="Tex02" type="text" size="2" value="0"></form></td></tr></table>
+<table border=1 style="position:absolute; top:80px;left:650px;border-collapse:collapse;"><form name="For03" action="#"><tr><td>地域名<input name="Tex00" type="text" size="11" value="ウラジオストック"></td><td>経済<input name="Tex01" type="text" size="2" value="2"></td><td>石油<input name="Tex02" type="text" size="2" value="0"></form></td></tr></table>
 
 <table border=1 style="position:absolute; top:120px;left:650px;border-collapse:collapse;"><form name="For04" action="#">
 <tr><td></td><td>評価</td><td>被評価</td><td>軍事力</td><td>経済力</td></tr>
@@ -2161,7 +2169,34 @@ function HyojiKirikae() {
 
 <table border=1 style="position:absolute; top:450px;left:650px;border-collapse:collapse;"><tr><td><input type="button" value="表示切替" onclick="HyojiKirikae()"></td></tr></table>
 
-<table border=1 style="position:absolute; top:450px;left:750px;border-collapse:collapse;"><tr><td><form name="For07"><textarea name="Memo00" cols=70 rows=4>大日本帝国はいずれの国家とも中立条約を締結していません</textarea></form></td></tr>
+<table border=1 style="position:absolute; top:450px;left:750px;border-collapse:collapse;"><tr><td><form name="For07"><textarea name="Memo00" cols=70 rows=4>ロシア帝国はいずれの国家とも中立条約を締結していません</textarea></form></td></tr>
+
+<table border=1 style="position:absolute; top:80px;left:1000px;border-collapse:collapse;"><tr><td><form name="For08"><select name="S00" onChange="For08Sel00()">
+	<option value="0">ウラジオストック
+	<option value="1">日本
+	<option value="2">朝鮮
+	<option value="3">満州
+	<option value="4">北京
+	<option value="5">上海
+	<option value="6">広州
+	<option value="7">南洋諸島
+	<option value="8">ハノイ
+	<option value="9">サイゴン
+	<option value="10">タイ
+	<option value="11">フィリピン
+	<option value="12">サラワク
+	<option value="13">シンガポール
+	<option value="14">ボルネオ
+	<option value="15">インドネシア
+	<option value="16">ビルマ
+	<option value="17">ベンガル
+	<option value="18">オーストラリア
+	<option value="19">ハワイ
+	<option value="20">日本海
+	<option value="21">東シナ海
+	<option value="22">南シナ海
+	<option value="23">ベンガル湾
+</form></td></tr>
 
 <script>
 window.document.For06.Memo00.defaultValue = "清仏戦争の翌年から第一次世界大戦の勃発までの、アジアにおける帝国主義の全盛期を扱うシナリオです。\n石油・政治体制の概念がなくルールがシンプルなため、初心者におススメです。\nプレイ可能国家(列強国)は日本・イギリス・アメリカ・フランス・オランダ・スペイン・ドイツ・清です。\nゲーム開始年：1886年　ゲーム終了年：1914年　1年＝2ターン";
