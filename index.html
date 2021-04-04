@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>アジア新時代 ver2.01</title>
+<title>アジア新時代 ver2.02</title>
 </head>
 <body>
 
@@ -59,10 +59,10 @@ var HojoHen = 0;
 <!--【Misc】-->
 var AIDipMisc = 3;<!--脅威度がこの値より小さいとき、AIは植民地拡大や宣戦布告を行い、大きいときは列強との融和政策に走る-->
 var AIHukaMisc = 2000;<!--脅威度*(友好度+50)がこれ以上の時、AIは中立条約を締結する-->
-var WarJudgeMil = 1.7;<!--仮想敵国より戦力がこの値以上の時、宣戦布告する-->
 var WarJudgeRan = 0.75;<!--条件を満たした時、この確率で宣戦布告する-->
 var WarMisc = 1;<!--損害＝戦力*期待値-->
 var MiscDef = 1.2;<!--防御側への戦闘補正-->
+var WarJudgeMil = MiscDef*1.4;<!--仮想敵国より戦力がこの値以上の時、宣戦布告する-->
 var HukaTurn = 10;<!--不可侵の期限-->
 var HukaArmLim = 0.8;<!--AIは自国と比較してこれ以下の軍事力の国とは積極的に不可侵を結びにいかない-->
 var MiscAIDip = 1;<!--AIの外交交渉係数-->
@@ -209,10 +209,10 @@ function Keisan() {
 	}
 	if (Scenario==41) {
 		if (NationHoy[1]>0) { NationEco[1] += 4; }
-		if (NationHoy[5]>0) { NationEco[5] += 2; }
+		if (NationHoy[5]>0) { NationEco[5] += 2; NationOil[5] += 2; }
 		NationEco[6] *= 0.7; NationEco[6] = Math.round(NationEco[6]*10)/10;
 		if (NationHoy[1]>0) { if (Event01==1) { NationEco[1] += 2; } }
-		if (NationHoy[5]>0) { if (Event03==1) { NationEco[5] += 4; NationOil[5] += 4; } }
+		if (NationHoy[5]>0) { if (Event03==1) { NationEco[5] += 4; NationOil[5] += 2; } }
 	}
 	if (Scenario==40) {
 		if (NationHoy[2]>0) { NationEco[2] += 4; }
@@ -357,7 +357,7 @@ function For00Sel00() {
 				NationArr[ 2] = new Array("大英帝国",0,0,4,1,5,98,0,0,0,0,0,0,0,0,0,0,"イギリス.png",18,0,0,0);
 				NationArr[ 3] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 				NationArr[ 4] = new Array("オランダ王国",0,0,3,1,2,98,0,0,0,0,0,0,0,0,0,0,"オランダ.png",99,0,0,0);
-				NationArr[ 5] = new Array("ソビエト連邦",0,0,1,1,1,98,0,0,0,0,0,0,0,0,0,0,"ソ連.png",0,0,0,0);
+				NationArr[ 5] = new Array("ソビエト連邦",0,0,3,1,1,98,0,0,0,0,0,0,0,0,0,0,"ソ連.png",0,0,0,0);
 				NationArr[ 6] = new Array("中国(国民党)",0,0,3,1,2,98,0,0,0,0,0,0,0,0,0,0,"国民党.png",6,0,0,0);
 				NationArr[ 7] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 				NationArr[ 8] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
@@ -398,7 +398,7 @@ function For00Sel00() {
 				AreaArr[12] = new Array("サラワク",0,3,2,0,0);
 				AreaArr[13] = new Array("シンガポール",1,0,2,0,0);
 				AreaArr[14] = new Array("ボルネオ",0,3,4,0,0);
-				AreaArr[15] = new Array("インドネシア",3,2,4,0,0);
+				AreaArr[15] = new Array("インドネシア",2,2,4,0,0);
 				AreaArr[16] = new Array("ビルマ",1,2,2,3,3);
 				AreaArr[17] = new Array("ベンガル",3,0,2,3,3);
 				AreaArr[18] = new Array("オーストラリア",1,1,2,5,0);
@@ -415,7 +415,7 @@ function For00Sel00() {
 				document.For01.Tex00.defaultValue = YearNum;
 				SeasonNum = 4;
 				document.For01.Tex01.defaultValue = "春";
-				document.For06.Memo00.defaultValue = "カイザーライヒという、第一次世界大戦でドイツが勝利したIF世界を扱うシナリオです。(元はゲームHears of IornのMOD)\n石油の追加ルールがあります。\nプレイ可能国家(列強国)は、日本・ドイツ・アメリカ・ロシア・オーストララシアです。\nゲーム開始年：1936年　ゲーム終了年：1950年　1年＝4ターン";
+				document.For06.Memo00.defaultValue = "カイザーライヒという、第一次世界大戦でドイツが勝利したIF世界を扱うシナリオです。(元はゲームHears of IornのMOD)\n石油の追加ルールがあります。\nプレイ可能国家(列強国)は、日本・ドイツ・アメリカ・オランダ・オーストララシア・清です。\nゲーム開始年：1936年　ゲーム終了年：1950年　1年＝4ターン";
 				document.For04.Tex00Nam.defaultValue = "日本";
 				document.For04.Tex01Nam.defaultValue = "独国";
 				document.For04.Tex02Nam.defaultValue = "米国";
@@ -431,11 +431,11 @@ function For00Sel00() {
 				//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義)、5保有領土数、6状態(0日本傀儡、98列強、99独立)
 				//8=列強0との関係値、14旗、15本土、16接続海域数、17接続海域(1)、18接続海域(2)
 				NationArr[ 0] = new Array("大日本帝国",0,0,4,1,2,98,0,0,0,0,0,0,0,0,0,0,"日本.png",1,0,0,0);
-				NationArr[ 1] = new Array("ドイツ帝国",0,0,4,1,6,98,0,0,0,0,0,0,0,0,0,0,"ドイツ.png",99,0,0,0);
+				NationArr[ 1] = new Array("ドイツ帝国",0,0,4,1,5,98,0,0,0,0,0,0,0,0,0,0,"ドイツ.png",99,0,0,0);
 				NationArr[ 2] = new Array("アメリカ合衆国",0,0,3,1,2,98,0,0,0,0,0,0,0,0,0,0,"アメリカ.png",19,0,0,0);
 				NationArr[ 3] = new Array("オーストララシア",0,0,2,1,1,98,0,0,0,0,0,0,0,0,0,0,"オーストララシア.png",18,0,0,0);
 				NationArr[ 4] = new Array("オランダ王国",0,0,2,1,2,98,0,0,0,0,0,0,0,0,0,0,"オランダ.png",99,0,0,0);
-				NationArr[ 5] = new Array("大清帝国",0,0,3,1,2,98,0,0,0,0,0,0,0,0,0,0,"清.png",4,0,0,0);
+				NationArr[ 5] = new Array("大清帝国",0,0,3,1,1,98,0,0,0,0,0,0,0,0,0,0,"清.png",4,0,0,0);
 				NationArr[ 6] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 				NationArr[ 7] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 				NationArr[ 8] = new Array("列強追加枠",0,0,0,1,0,98,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
@@ -447,8 +447,8 @@ function For00Sel00() {
 				NationArr[13] = new Array("タイ",0,0,1,1,1,99,0,0,0,0,0,0,0,0,0,0,"タイ.png",99,1,1002,0);
 				NationArr[14] = new Array("ビルマ",0,0,1,1,1,99,0,0,0,0,0,0,0,0,0,0,"ビルマ.png",99,1,1003,0);
 				NationArr[15] = new Array("インド",0,0,3,1,1,99,0,0,0,0,0,0,0,0,0,0,"インド.png",99,1,1003,0);
-				NationArr[16] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
-				NationArr[17] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[16] = new Array("上海地方政府",0,0,3,1,1,5,0,0,0,0,0,0,0,0,0,0,"清2.png",99,1,1001,0);
+				NationArr[17] = new Array("広州地方政府",0,0,3,1,1,1,0,0,0,0,0,0,0,0,0,0,"清2.png",99,2,1001,1002);
 				NationArr[18] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 				NationArr[19] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
 				NationArr[20] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
@@ -466,9 +466,9 @@ function For00Sel00() {
 				AreaArr[ 2] = new Array("朝鮮",1,0,0,2,1);
 				AreaArr[ 3] = new Array("満州",2,2,12,3,2);
 				AreaArr[ 4] = new Array("北京",3,0,5,3,2);
-				AreaArr[ 5] = new Array("上海",3,0,5,3,2);
-				AreaArr[ 6] = new Array("広州",3,0,1,3,2);
-				AreaArr[ 7] = new Array("南洋諸島",0,0,1,0,0);
+				AreaArr[ 5] = new Array("上海",3,0,16,3,2);
+				AreaArr[ 6] = new Array("広州",3,0,17,3,2);
+				AreaArr[ 7] = new Array("南洋諸島",1,0,1,0,0);
 				AreaArr[ 8] = new Array("ハノイ",1,0,1,3,3);
 				AreaArr[ 9] = new Array("サイゴン",1,0,1,3,3);
 				AreaArr[10] = new Array("タイ",1,0,13,1,0);
@@ -476,7 +476,7 @@ function For00Sel00() {
 				AreaArr[12] = new Array("サラワク",0,3,1,0,0);
 				AreaArr[13] = new Array("シンガポール",1,0,1,0,0);
 				AreaArr[14] = new Array("ボルネオ",0,3,4,0,0);
-				AreaArr[15] = new Array("インドネシア",3,2,4,0,0);
+				AreaArr[15] = new Array("インドネシア",2,2,4,0,0);
 				AreaArr[16] = new Array("ビルマ",1,1,14,3,3);
 				AreaArr[17] = new Array("ベンガル",3,0,15,3,3);
 				AreaArr[18] = new Array("オーストラリア",3,1,3,5,0);
@@ -821,31 +821,35 @@ function AIact() {
 		<!--列強との融和策-->
 		if (AIKyo[AI]>=AIDipMisc) {
 			<!--中立条約締結-->
-			for (HenA=0;HenA<=9;HenA++) {
-				if (AIDipComTurn==0) {
-					if (HenA!=AI) {
-						if (NationHuka[AI][HenA]<=2) {
-							if (NationArm[HenA]/NationArm[AI]>=HukaArmLim) {
-								if (((NationKan[HenA][AI]+100)/100)*AIKyo[HenA]*(NationArm[AI]/NationArm[HenA])>AIDipMisc*(Math.random()+Math.random()+Math.random()+Math.random()/2)) {
-									if (Math.random()>0.8) {
-										if (HenA!=PlayNation) {
-											NationHuka[AI][HenA]=HukaTurn;
-											NationHuka[HenA][AI]=HukaTurn;
-											alert(NationNam[AI]+"は"+NationNam[HenA]+"と中立条約を締結しました");
-											NationKan[AI][HenA]+=10;
-											AIDipComTurn=1;
-										}
-										if (HenA==PlayNation) {
-											if (window.confirm(NationNam[AI]+"から中立条約が提案されました\n条約を締結しますか？")) {
-												NationHuka[AI][HenA]=HukaTurn;
-												NationHuka[HenA][AI]=HukaTurn;
-												NationKan[AI][HenA]+=25;
+			for (HenB=75;HenB>=0;HenB--) {
+				for (HenA=0;HenA<=9;HenA++) {
+					if (AIDipComTurn==0) {
+						if (HenB==Math.round(NationArm[HenA])) {
+							if (HenA!=AI) {
+								if (NationHuka[AI][HenA]<=2) {
+									if (NationArm[HenA]/NationArm[AI]>=HukaArmLim) {
+										if (((NationKan[HenA][AI]+100)/100)*AIKyo[HenA]*(NationArm[AI]/NationArm[HenA])>AIDipMisc*(Math.random()+Math.random()+Math.random()+Math.random()/2)) {
+											if (Math.random()>0.8) {
+												if (HenA!=PlayNation) {
+													NationHuka[AI][HenA]=HukaTurn;
+													NationHuka[HenA][AI]=HukaTurn;
+													alert(NationNam[AI]+"は"+NationNam[HenA]+"と中立条約を締結しました");
+													NationKan[AI][HenA]+=10;
+													AIDipComTurn=1;
+												}
+												if (HenA==PlayNation) {
+													if (window.confirm(NationNam[AI]+"から中立条約が提案されました\n条約を締結しますか？")) {
+														NationHuka[AI][HenA]=HukaTurn;
+														NationHuka[HenA][AI]=HukaTurn;
+														NationKan[AI][HenA]+=25;
+													}
+													NationKan[AI][HenA]-=10;
+													AIDipComTurn=1;
+												}
+												if (NationKan[AI][HenA]>50) { NationKan[AI][HenA]=50; }
+												if (NationKan[AI][HenA]<-50) { NationKan[AI][HenA]=-50; }
 											}
-											NationKan[AI][HenA]-=10;
-											AIDipComTurn=1;
 										}
-										if (NationKan[AI][HenA]>50) { NationKan[AI][HenA]=50; }
-										if (NationKan[AI][HenA]<-50) { NationKan[AI][HenA]=-50; }
 									}
 								}
 							}
@@ -966,6 +970,9 @@ function AIact() {
 						NationKan[HenB][AI] -= HenC;
 						if (NationKan[HenB][AI]<-50) { NationKan[HenB][AI]=-50; }
 						if (NationKan[HenB][SyokuminTarget]>0) { NationKan[HenB][SyokuminTarget]=0; }
+						if (NationHoy[HenB]==0) {
+							NationKan[HenB][AI]=0;
+						}
 					}
 				}
 			}
@@ -1810,8 +1817,8 @@ function ComTurAct() {
 		}
 		<!--プレイヤー用・資金・石油収支計算-->
 		Money+=NationEco[PlayNation];
-		Money-=NationArm[PlayNation]/2;	
 		if (Scenario<10) {
+			Money-=NationArm[PlayNation]/2;
 			if (Money<0) { NationArm[PlayNation]-=0.5; alert("資金不足により軍の戦力が低下しています"); Money=0; }
 			if (NationArm[PlayNation]<0) { NationArm[PlayNation]=0; }
 		}
@@ -1832,8 +1839,7 @@ function ComTurAct() {
 		if (Settei02==01) {
 			while (Oil<NationArm[PlayNation]) {
 				if (Money<1) {
-					alert("資金不足により石油購入が停止されました\n再度、石油購入を自動化する場合はもう一度各種設定で指定してください");
-					Settei02=0;
+					alert("資金不足により石油購入が行われませんでした\n次ターン以降、軍の維持費分の石油が支払えなかった場合、軍の戦力が低下します");
 					break;
 				}
 				if (Money>=0) {
@@ -2128,6 +2134,8 @@ function HyojiKirikae() {
 
 <table border=1 style="position:absolute; top:0px;left:650px;border-collapse:collapse;"><tr><td><form name="For00" action="#"><select name="S00" onChange="For00Sel00()">
 	<option>帝国主義全盛(1886年)
+	<option>軍靴の足音(1936年)
+	<option>Kaiserreich(1936年IF)
 </select></form></td><td><form name="For01" action="#"><input name="Tex00" type="text" size="1" value="1886">年</td><td><input name="Tex01" type="text" size="1" value="前期"></td><td><input type="button" value="決定" onclick="Kettei()"></td><td>資金<input name="Tex02" type="text" size="1" value="0"></td><td>備蓄石油<input name="Tex03" type="text" size="1" value="0"></td><td>石油相場<input name="Tex04" type="text" size="1" value="0"></form></tr></table>
 
 <table border=1 style="position:absolute; top:40px;left:650px;border-collapse:collapse;">
@@ -2215,7 +2223,7 @@ window.document.For06.Memo00.defaultValue = "清仏戦争の翌年から第一�
 <p></p>
 <p>・経済投資　資金12を消費して、対象地域の経済力を+0.5します。</p>
 <p></p>
-<p>・石油購入　国際市場から石油を購入します。資金1で購入できる石油の量は、自国が抑えている油田の生産力、産油国との関係性により変化します。石油は1920年以前のシナリオでは使用しません。</p>
+<p>・石油購入　資金1を消費して市場から石油を購入します。資金1あたりで購入できる石油の量は、各国個別の石油レートにより変動します。石油は1920年以前のシナリオでは使用しません。</p>
 <p></p>
 <p>・外交交渉　対象国の自国に対する評価を改善します。自国の軍事が高いほど効果も高くなります。外交交渉と砲艦外交は1ターンに1度しか実行できません。</p>
 <p></p>
@@ -2261,9 +2269,19 @@ window.document.For06.Memo00.defaultValue = "清仏戦争の翌年から第一�
 <p></p>
 <p>中立条約の期間内にも延長交渉が行えますが、AIは残り期間が2ターン以内にならないとあまり熱心に期間延長を検討しません。またAIからの中立条約の交渉を拒否した場合、AIの態度が多少悪化します。</p>
 <p></p>
+<p>【石油】</p>
+<p></p>
+<p>1920年以降開始のシナリオでは石油の概念が導入されており、軍事力1の維持には資金0.5ではなく石油0.5が必要になります。</p>
+<p></p>
+<p>各国には個別の石油レートが設定されており、産油地帯を確保していると石油レートが向上します。例えば石油レート1.0の場合は資金1で石油1.0が購入できます。</p>
+<p></p>
+<p>石油はコマンド「石油購入」で手動購入することも可能ですが、デフォルト設定では自動的に十分量の石油が自動で購入されるようになっています。(各種設定で変更可能)</p>
+<p></p>
 <p>【その他詳細】</p>
 <p></p>
-<p>・海域を支配することは、非列強国への自国の影響力を高めることに役立ちます。海域へ影響力を高めるには、強力な艦隊を保有する以外にも、海域に隣接する拠点を抑えることが重要です。</p>
+<p>・初回プレイ時は「帝国主義全盛(1886年)」シナリオのフランスがおススメです。(日本は国力が小さいので中級者向け向け)</p>
+<p></p>
+<p>・海域を支配することは、非列強国への自国の影響力を高めることに役立ちます。海域へ影響力を高めるには、強力な艦隊を保有する以外にも、海域に隣接する拠点を抑えることが重要です。(例えばフィリピンを領有する勢力は、対岸の広州に対してより大きな影響力を行使できます)</p>
 <p></p>
 <p>・関係性25以上の国家には宣戦布告できません。</p>
 <p></p>
@@ -2274,6 +2292,8 @@ window.document.For06.Memo00.defaultValue = "清仏戦争の翌年から第一�
 <p></p>
 <p>・中立条約の経過計算はターン終了時に行われます。ちなみに1ターンは日本の手番から始まり、UIの上から順番に行われ、清の手番が終わると中立条約の期間が-1され、再び日本から次のターンが始まります。</p>
 <p></p>
+<p>・産油地帯を多く持つ国家との関係が良い場合、多少石油レートが向上します。</p>
+<p></p>
 <p>・稀に数値が1.5999999999999996とかになる→JavaScript側の仕様です。再計算するとゲームに支障はないので、無視してください。</p>
 <p></p>
 <p>・表示がずれる→画面の拡大率を100％にしてください</p>
@@ -2281,6 +2301,8 @@ window.document.For06.Memo00.defaultValue = "清仏戦争の翌年から第一�
 <p>・旗をダブルクリックすることで、右上の選択欄で指定しているコマンドを実行できます。</p>
 <p></p>
 <p>・AIはチートしてる？→していません。AIは全てプレイヤーと同じ条件で行動します。</p>
+<p></p>
+<p>・なんでハワイで石油が出るの？→太平洋の拠点を失ったアメリカに、西海岸上陸するぞゴルァと脅しをかけて石油を安く輸入していると脳内保管してください。</p>
 <p></p>
 <p>【ver1からの変更点】</p>
 <p></p>
