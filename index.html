@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>アジア新時代 ver2.02</title>
+<title>アジア新時代 ver2.03</title>
 </head>
 <body>
 
@@ -1043,8 +1043,8 @@ function OilKonyuAI() {
 <!--【戦争()・講和()】-->
 function War() {
 	alert(NationNam[WarA]+"が"+NationNam[WarD]+"に宣戦布告");
-	HenA = Math.round(NationArm[WarA]*(Math.random()+Math.random()+Math.random()+Math.random())*WarMisc*5)/10;
-	HenB = Math.round(NationArm[WarD]*(Math.random()+Math.random()+Math.random()+Math.random())*WarMisc*5*MiscDef)/10;
+	HenA = Math.round(NationArm[WarA]*((Math.random()+Math.random()+Math.random()+Math.random()+2))*WarMisc)/4;
+	HenB = Math.round(NationArm[WarD]*((Math.random()+Math.random()+Math.random()+Math.random()+2))*WarMisc*MiscDef)/4;
 	HenC = Math.round((NationArm[WarA]-HenB)*10)/10;
 	HenD = Math.round((NationArm[WarD]-HenA)*10)/10;
 	if (HenC<0) { HenC=0; } if (HenD<0) { HenD=0; }
@@ -1556,17 +1556,17 @@ function ComDip() {
 									NationKan[NationInd[HenA]][PlayNation] -= 25;
 									if (NationKan[NationInd[HenA]][PlayNation]<-50) { NationKan[NationInd[HenA]][PlayNation]=-50; }
 								}
+								for (HenB=0;HenB<=9;HenB++) {
+									if (HenB!=PlayNation) {
+										HenC = Math.round((NationKan[HenB][HenA]+50)*(NationEco[HenB]+NationOil[HenB])/50);
+										NationKan[HenB][PlayNation] -= HenC;
+										if (NationKan[HenB][HenA]>0) { NationKan[HenB][HenA]=0; }
+										if (NationKan[HenB][PlayNation]<-50) { NationKan[HenB][PlayNation]=-50; }
+									}
+								}
 							}
 							NationInd[HenA]=PlayNation;
 							NationKan[PlayNation][HenA]=0;
-							for (HenB=0;HenB<=9;HenB++) {
-								if (HenB!=PlayNation) {
-									HenC = Math.round((NationKan[HenB][HenA]+50)*(NationEco[HenB]+NationOil[HenB])/50);
-									NationKan[HenB][PlayNation] -= HenC;
-									if (NationKan[HenB][HenA]>0) { NationKan[HenB][HenA]=0; }
-									if (NationKan[HenB][PlayNation]<-50) { NationKan[HenB][PlayNation]=-50; }
-								}
-							}
 						}
 					}
 				}
