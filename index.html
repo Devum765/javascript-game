@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>アジア新時代 ver2.03</title>
+<title>アジア新時代 ver2.10</title>
 </head>
 <body>
 
@@ -70,7 +70,7 @@ var MiscSyokuminHogo = 1;<!--AIが自国保護国の外交的防衛にどれだ�
 var MiscWarCost = 0;<!--プレイヤーが宣戦布告するのに必要な資金＝保有軍数*MiscWarCost-->
 
 <!--【国家・地域・海域データ】-->
-//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義)、5保有領土数、6状態(0日本傀儡、97海域、98列強、99独立)
+//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義、4新興国家)、5保有領土数、6状態(0日本傀儡、97海域、98列強、99独立)
 //8=列強0との関係値、14旗、15本土(98海域、99非列強国は本土を持たない)、16接続海域
 NationArr = new Array();
 NationNam = new Array();
@@ -218,6 +218,9 @@ function Keisan() {
 		if (NationHoy[2]>0) { NationEco[2] += 4; }
 		NationEco[8] *= 0.6; NationEco[8] = Math.round(NationEco[8]*10)/10;
 	}
+	if (Scenario==50) {
+		if (NationHoy[1]>0) { NationEco[1] += 5; }
+	}
 }
 
 <!--【石油購入計算(プレイヤー)】-->
@@ -247,7 +250,7 @@ function For05Sel00() {
 function For00Sel00() {
 	if (GameNum==0) {
 		if (first==1) { HenA = document.For00.S00.selectedIndex; }
-		if (first==0) { HenA=0; }
+		if (first==0) { HenA = 0; }
 		switch (HenA) {
 			case 0:
 				Scenario = 0;
@@ -270,7 +273,7 @@ function For00Sel00() {
 				}
 				EndYear = 1914;<!--56ターン-->
 
-				//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義)、5保有領土数、6状態(0日本傀儡、98列強、99独立)
+				//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義、4新興国家)、5保有領土数、6状態(0日本傀儡、98列強、99独立)
 				//8=列強0との関係値、14旗、15本土、16接続海域数、17接続海域(1)、18接続海域(2)
 				NationArr[ 0] = new Array("大日本帝国",0,0,3,1,1,98,0,0,0,0,0,0,0,0,0,0,"日本.png",1,0,0,0);
 				NationArr[ 1] = new Array("大英帝国",0,0,3,1,5,98,0,0,0,0,0,0,0,0,0,0,"イギリス.png",18,0,0,0);
@@ -350,7 +353,7 @@ function For00Sel00() {
 				document.For04.Tex09Nam.defaultValue = "×";
 				EndYear = 1950;<!--56ターン-->
 
-				//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義)、5保有領土数、6状態(0日本傀儡、98列強、99独立)
+				//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義、4新興国家)、5保有領土数、6状態(0日本傀儡、98列強、99独立)
 				//8=列強0との関係値、14旗、15本土、16接続海域数、17接続海域(1)、18接続海域(2)
 				NationArr[ 0] = new Array("大日本帝国",0,0,5,1,3,98,0,0,0,0,0,0,0,0,0,0,"日本.png",1,0,0,0);
 				NationArr[ 1] = new Array("アメリカ合衆国",0,0,4,1,2,98,0,0,0,0,0,0,0,0,0,0,"アメリカ.png",19,0,0,0);
@@ -428,7 +431,7 @@ function For00Sel00() {
 				document.For04.Tex09Nam.defaultValue = "×";
 				EndYear = 1950;<!--56ターン-->
 
-				//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義)、5保有領土数、6状態(0日本傀儡、98列強、99独立)
+				//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義、4新興国家)、5保有領土数、6状態(0日本傀儡、98列強、99独立)
 				//8=列強0との関係値、14旗、15本土、16接続海域数、17接続海域(1)、18接続海域(2)
 				NationArr[ 0] = new Array("大日本帝国",0,0,4,1,2,98,0,0,0,0,0,0,0,0,0,0,"日本.png",1,0,0,0);
 				NationArr[ 1] = new Array("ドイツ帝国",0,0,4,1,5,98,0,0,0,0,0,0,0,0,0,0,"ドイツ.png",99,0,0,0);
@@ -482,6 +485,84 @@ function For00Sel00() {
 				AreaArr[18] = new Array("オーストラリア",3,1,3,5,0);
 				AreaArr[19] = new Array("ハワイ",0,4,2,0,0);
 				MiscAICol = 0.5;
+				ScenarioKeisan()
+				Keisan()
+				Area()
+				Settei02 = 1;
+			break;
+			case 3:
+				Scenario = 50;
+				YearNum = 2016;
+				document.For01.Tex00.defaultValue = YearNum;
+				SeasonNum = 4;
+				document.For01.Tex01.defaultValue = "春";
+				document.For06.Memo00.defaultValue = "アメリカ大統領にドナルド・トランプが就任した2016年から始まる「ネタ」シナリオです。\n石油の追加ルールがあります。\nプレイ可能国家(列強国)は、中国・アメリカ・日本・インド・インドネシア・韓国・オーストラリア・ベトナム・フィリピン・ロシアです。\n中国・インド・インドネシア・ベトナム・フィリピン・ロシアは経済投資が資金8で行えます。\nゲーム開始年：2016年　ゲーム終了年：2030年　1年＝4ターン";
+				document.For04.Tex00Nam.defaultValue = "中国";
+				document.For04.Tex01Nam.defaultValue = "米国";
+				document.For04.Tex02Nam.defaultValue = "日本";
+				document.For04.Tex03Nam.defaultValue = "印度";
+				document.For04.Tex04Nam.defaultValue = "印ネ";
+				document.For04.Tex05Nam.defaultValue = "韓国";
+				document.For04.Tex06Nam.defaultValue = "豪州";
+				document.For04.Tex07Nam.defaultValue = "ベト";
+				document.For04.Tex08Nam.defaultValue = "フィ";
+				document.For04.Tex09Nam.defaultValue = "露国";
+				EndYear = 2030;<!--56ターン-->
+
+				//0国名、1経済、2石油、3軍事力、4体制(0自由主義、1帝国主義、2軍国主義、3共産主義、4新興国家)、5保有領土数、6状態(0日本傀儡、98列強、99独立)
+				//8=列強0との関係値、14旗、15本土、16接続海域数、17接続海域(1)、18接続海域(2)
+				NationArr[ 0] = new Array("中華人民共和国",0,0,6,4,4,98,0,0,0,0,0,0,0,0,0,0,"中共.png",4,0,0,0);
+				NationArr[ 1] = new Array("アメリカ合衆国",0,0,7,1,2,98,0,0,0,0,0,0,0,0,0,0,"アメリカ.png",19,0,0,0);
+				NationArr[ 2] = new Array("日本",0,0,4,1,1,98,0,0,0,0,0,0,0,0,0,0,"日本.png",1,0,0,0);
+				NationArr[ 3] = new Array("インド共和国",0,0,5,4,1,98,0,0,0,0,0,0,0,0,0,0,"インド.png",17,0,0,0);
+				NationArr[ 4] = new Array("インドネシア",0,0,4,4,2,98,0,0,0,0,0,0,0,0,0,0,"インドネシア.png",15,0,0,0);
+				NationArr[ 5] = new Array("大韓民国",0,0,5,1,1,98,0,0,0,0,0,0,0,0,0,0,"韓国.png",2,0,0,0);
+				NationArr[ 6] = new Array("オーストラリア",0,0,4,1,1,98,0,0,0,0,0,0,0,0,0,0,"オーストラリア.png",18,0,0,0);
+				NationArr[ 7] = new Array("ベトナム",0,0,4,4,2,98,0,0,0,0,0,0,0,0,0,0,"共産ベトナム.png",8,0,0,0);
+				NationArr[ 8] = new Array("フィリピン",0,0,3,4,1,98,0,0,0,0,0,0,0,0,0,0,"フィリピン.png",11,0,0,0);
+				NationArr[ 9] = new Array("ロシア共和国",0,0,4,4,1,98,0,0,0,0,0,0,0,0,0,0,"ロシア.png",0,0,0,0);
+
+				NationArr[10] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[11] = new Array("シンガポール",0,0,3,4,1,2,0,0,0,0,0,0,0,0,0,0,"シンガポール.png",99,2,1002,1003);
+				NationArr[12] = new Array("マレーシア",0,0,2,4,1,99,0,0,0,0,0,0,0,0,0,0,"マレーシア.png",99,1,1002,0);
+				NationArr[13] = new Array("タイ",0,0,2,4,1,99,0,0,0,0,0,0,0,0,0,0,"タイ.png",99,1,1002,0);
+				NationArr[14] = new Array("ミャンマー",0,0,2,4,1,99,0,0,0,0,0,0,0,0,0,0,"ビルマ.png",99,1,1003,0);
+				NationArr[15] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[16] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[17] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[18] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[19] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[20] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[21] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[22] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[23] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[24] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[25] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[26] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+				NationArr[27] = new Array("追加枠",0,0,0,1,0,99,0,0,0,0,0,0,0,0,0,0,"追加枠.png",99,0,0,0);
+
+				//0=地名、1=経済、2=石油、3=支配国、4=ナショナリズム、5=共産主義浸透度
+				AreaArr[ 0] = new Array("ウラジオストック",2,2,9,5,4);
+				AreaArr[ 1] = new Array("日本",4,0,2,5,1);
+				AreaArr[ 2] = new Array("朝鮮",2,0,5,2,1);
+				AreaArr[ 3] = new Array("満州",2,2,0,3,2);
+				AreaArr[ 4] = new Array("北京",2,1,0,3,2);
+				AreaArr[ 5] = new Array("上海",2,0,0,3,2);
+				AreaArr[ 6] = new Array("広州",2,0,0,3,2);
+				AreaArr[ 7] = new Array("南洋諸島",1,0,1,0,0);
+				AreaArr[ 8] = new Array("ハノイ",1,0,7,3,3);
+				AreaArr[ 9] = new Array("サイゴン",1,0,7,3,3);
+				AreaArr[10] = new Array("タイ",1,0,13,1,0);
+				AreaArr[11] = new Array("フィリピン",1,0,8,3,0);
+				AreaArr[12] = new Array("サラワク",1,1,12,0,0);
+				AreaArr[13] = new Array("シンガポール",1,8,11,0,0);
+				AreaArr[14] = new Array("ボルネオ",1,1,4,0,0);
+				AreaArr[15] = new Array("インドネシア",2,1,4,0,0);
+				AreaArr[16] = new Array("ビルマ",1,1,14,3,3);
+				AreaArr[17] = new Array("ベンガル",5,2,3,3,3);
+				AreaArr[18] = new Array("オーストラリア",3,1,6,5,0);
+				AreaArr[19] = new Array("ハワイ",0,6,1,0,0);
+				MiscAICol = 0.25;
 				ScenarioKeisan()
 				Keisan()
 				Area()
@@ -599,6 +680,23 @@ function Area() {
 			case  3: document.For02.Tex05.defaultValue = "豪州保護"; break;
 			case  4: document.For02.Tex05.defaultValue = "蘭国保護"; break;
 			case  5: document.For02.Tex05.defaultValue = "清国保護"; break;
+			case 97: document.For02.Tex05.defaultValue = "海域"; break;
+			case 98: document.For02.Tex05.defaultValue = "列強"; break;
+			case 99: document.For02.Tex05.defaultValue = "独立"; break;
+		}
+	}
+	if (Scenario==50) {
+		switch (NationInd[HenA]) {
+			case  0: document.For02.Tex05.defaultValue = "中国保護"; break;
+			case  1: document.For02.Tex05.defaultValue = "日本保護"; break;
+			case  2: document.For02.Tex05.defaultValue = "米国保護"; break;
+			case  3: document.For02.Tex05.defaultValue = "印度保護"; break;
+			case  4: document.For02.Tex05.defaultValue = "印ネ保護"; break;
+			case  5: document.For02.Tex05.defaultValue = "韓国保護"; break;
+			case  6: document.For02.Tex05.defaultValue = "豪州保護"; break;
+			case  7: document.For02.Tex05.defaultValue = "ベト保護"; break;
+			case  8: document.For02.Tex05.defaultValue = "フィ保護"; break;
+			case  9: document.For02.Tex05.defaultValue = "露国保護"; break;
 			case 97: document.For02.Tex05.defaultValue = "海域"; break;
 			case 98: document.For02.Tex05.defaultValue = "列強"; break;
 			case 99: document.For02.Tex05.defaultValue = "独立"; break;
@@ -787,33 +885,79 @@ function AIact() {
 				AIOil[AI]+=AIOir[AI];
 			}
 		}
-		<!--資金消費(陸海軍増強)--><!--経済投資は行わない-->
-		switch (NationIdo[AI]) {
-			case 0:
-				while (AIMoney[AI]>=6) {
-					AIMoney[AI]-=6;
-					NationArm[AI]+=0.5;
-				}
-			break;
-			case 1:
-				while (AIMoney[AI]>=6) {
-					AIMoney[AI]-=6;
-					NationArm[AI]+=0.5;
-				}
-			break;
-			case 2:
-				while (AIMoney[AI]>=5) {
-					AIMoney[AI]-=5;
-					NationArm[AI]+=0.5;
-				}
-			break;
-			case 3:
-				while (AIMoney[AI]>=5) {
-					AIMoney[AI]-=5;
-					NationArm[AI]+=0.5;
-				}
-			break;
+		<!--資金消費-->
+		<!--陸海軍増強-->
+		KyouiKeisan()
+		if ( (Scenario<=49)  ||  (AIKyo[AI]>=AIDipMisc) ) {
+			switch (NationIdo[AI]) {
+				case 0:
+					while (AIMoney[AI]>=6) {
+						AIMoney[AI]-=6;
+						NationArm[AI]+=0.5;
+					}
+				break;
+				case 1:
+					while (AIMoney[AI]>=6) {
+						AIMoney[AI]-=6;
+						NationArm[AI]+=0.5;
+					}
+				break;
+				case 2:
+					while (AIMoney[AI]>=5) {
+						AIMoney[AI]-=5;
+						NationArm[AI]+=0.5;
+					}
+				break;
+				case 3:
+					while (AIMoney[AI]>=5) {
+						AIMoney[AI]-=5;
+						NationArm[AI]+=0.5;
+					}
+				break;
+				case 4:
+					while (AIMoney[AI]>=6) {
+						AIMoney[AI]-=6;
+						NationArm[AI]+=0.5;
+					}
+				break;
+			}
 		}
+		<!--経済投資-->
+		if (Scenario>=50 && YearNum<=2022) {
+			switch (NationIdo[AI]) {
+				case 0:
+					while (AIMoney[AI]>=10) {
+						AIMoney[AI]-=10;
+						AreaEco[NationHon[AI]]+=0.5;
+					}
+				break;
+				case 1:
+					while (AIMoney[AI]>=12) {
+						AIMoney[AI]-=12;
+						AreaEco[NationHon[AI]]+=0.5;
+					}
+				break;
+				case 2:
+					while (AIMoney[AI]>=12) {
+						AIMoney[AI]-=12;
+						AreaEco[NationHon[AI]]+=0.5;
+					}
+				break;
+				case 3:
+					while (AIMoney[AI]>=12) {
+						AIMoney[AI]-=12;
+						AreaEco[NationHon[AI]]+=0.5;
+					}
+				break;
+				case 4:
+					while (AIMoney[AI]>=8) {
+						AIMoney[AI]-=8;
+						AreaEco[NationHon[AI]]+=0.5;
+					}
+				break;
+			}
+		}
+		Area()
 		KaiikiKeisan()
 		<!--外交交渉-->
 		KyouiKeisan()
@@ -1410,6 +1554,37 @@ function Event() {
 				if (NationHoy[6]>=1) { NationKan[6][0]-=1; }
 			}
 		}
+		if (Scenario==50) {
+			if (YearNum==2017 && Event00==0) {
+				alert("アメリカで「ドナルド・トランプ」が大統領に就任しました。\n米中の関係性が-15変化");
+				NationKan[0][1]-=15;
+				NationKan[1][0]-=15;
+				Event00=1;
+			}
+			if (YearNum==2021 && Event01==0) {
+				alert("アメリカで「ジョー・バイデン」が大統領に就任しました。\nアメリカと日本、韓国、豪州の関係性が+10変化");
+				NationKan[2][1]+=10;
+				NationKan[1][2]+=10;
+				NationKan[5][1]+=10;
+				NationKan[1][5]+=10;
+				NationKan[6][1]+=10;
+				NationKan[1][6]+=10;
+				Event01=1;
+			}
+			if (YearNum==2021 && Event02==0) {
+				alert("中国で「香港民主化デモ」が発生\n中国に対する米国、日本、韓国、豪州の評価が-10変化");
+				NationKan[1][0]-=10;
+				NationKan[2][0]-=10;
+				NationKan[5][0]-=10;
+				NationKan[6][0]-=10;
+				Event02=1;
+			}
+			if (YearNum==2021 && Event03==0) {
+				alert("ミャンマーで軍事クーデターが発生しました\nミャンマーが独立状態に変化");
+				NationInd[14]=99;
+				Event03=1;
+			}
+		}
 		for (HenA=0;HenA<=9;HenA++) {<!--関係性の範囲50～-50-->
 			for (HenB=0;HenB<=27;HenB++) {
 				if (NationKan[HenA][HenB]>50) { NationKan[HenA][HenB]=50; }
@@ -1475,12 +1650,12 @@ function ComEco() {
 				NationEco[PlayNation] += 0.5;
 				NationEco[PlayNation] = Math.round(NationEco[PlayNation]*10)/10;
 				document.For02.Tex01.defaultValue = NationEco[PlayNation];
-				for (HenA=0;HenA<=9;HenA++) {
-					if (HenA!=PlayNation) {
-						NationKan[HenA][PlayNation] -= Math.round(5*NationArm[HenA]/NationArm[PlayNation]);
-						if (NationKan[HenA][PlayNation]<-50) { NationKan[HenA][PlayNation]=-50; }
-					}
-				}
+				<!-- for (HenA=0;HenA<=9;HenA++) { -->
+					<!-- if (HenA!=PlayNation) { -->
+						<!-- NationKan[HenA][PlayNation] -= Math.round(5*NationArm[HenA]/NationArm[PlayNation]); -->
+						<!-- if (NationKan[HenA][PlayNation]<-50) { NationKan[HenA][PlayNation]=-50; } -->
+					<!-- } -->
+				<!-- } -->
 				HomeLandHyouji()
 			}
 		}
@@ -1556,13 +1731,13 @@ function ComDip() {
 									NationKan[NationInd[HenA]][PlayNation] -= 25;
 									if (NationKan[NationInd[HenA]][PlayNation]<-50) { NationKan[NationInd[HenA]][PlayNation]=-50; }
 								}
-								for (HenB=0;HenB<=9;HenB++) {
-									if (HenB!=PlayNation) {
-										HenC = Math.round((NationKan[HenB][HenA]+50)*(NationEco[HenB]+NationOil[HenB])/50);
-										NationKan[HenB][PlayNation] -= HenC;
-										if (NationKan[HenB][HenA]>0) { NationKan[HenB][HenA]=0; }
-										if (NationKan[HenB][PlayNation]<-50) { NationKan[HenB][PlayNation]=-50; }
-									}
+							}
+							for (HenB=0;HenB<=9;HenB++) {
+								if (HenB!=PlayNation) {
+									HenC = Math.round((NationKan[HenB][HenA]+50)*(NationEco[HenB]+NationOil[HenB])/50);
+									NationKan[HenB][PlayNation] -= HenC;
+									if (NationKan[HenB][HenA]>0) { NationKan[HenB][HenA]=0; }
+									if (NationKan[HenB][PlayNation]<-50) { NationKan[HenB][PlayNation]=-50; }
 								}
 							}
 							NationInd[HenA]=PlayNation;
@@ -1659,6 +1834,8 @@ function ComWar() {
 								case 0: HenZ=25; break;
 								case 1: HenZ=25; break;
 								case 2: HenZ=25; break;
+								case 3: HenZ=25; break;
+								case 4: HenZ=25; break;
 							}
 							if (HenB>HenZ) {
 								alert("我が国の宣戦国に対する評価が"+HenZ+"以下でないと宣戦布告できません");
@@ -2011,6 +2188,8 @@ function Kettei() {
 					case 0: BuildArm=6; BuildEco=10; break;
 					case 1: BuildArm=6; BuildEco=12; break;
 					case 2: BuildArm=5; BuildEco=12; break;
+					case 3: BuildArm=6; BuildEco=12; break;
+					case 4: BuildArm=6; BuildEco=8; break;
 				}
 				<!--AI初期設定-->
 				for (HenA=0;HenA<=9;HenA++) {
@@ -2136,6 +2315,7 @@ function HyojiKirikae() {
 	<option>帝国主義全盛(1886年)
 	<option>軍靴の足音(1936年)
 	<option>Kaiserreich(1936年IF)
+	<option>アジア新時代(2016年)
 </select></form></td><td><form name="For01" action="#"><input name="Tex00" type="text" size="1" value="1886">年</td><td><input name="Tex01" type="text" size="1" value="前期"></td><td><input type="button" value="決定" onclick="Kettei()"></td><td>資金<input name="Tex02" type="text" size="1" value="0"></td><td>備蓄石油<input name="Tex03" type="text" size="1" value="0"></td><td>石油相場<input name="Tex04" type="text" size="1" value="0"></form></tr></table>
 
 <table border=1 style="position:absolute; top:40px;left:650px;border-collapse:collapse;">
@@ -2276,6 +2456,10 @@ window.document.For06.Memo00.defaultValue = "清仏戦争の翌年から第一�
 <p>各国には個別の石油レートが設定されており、産油地帯を確保していると石油レートが向上します。例えば石油レート1.0の場合は資金1で石油1.0が購入できます。</p>
 <p></p>
 <p>石油はコマンド「石油購入」で手動購入することも可能ですが、デフォルト設定では自動的に十分量の石油が自動で購入されるようになっています。(各種設定で変更可能)</p>
+<p></p>
+<p>【アジア新時代】</p>
+<p></p>
+<p>2016年シナリオでは、アジアの新興国家(中国・インド・インドネシア・ベトナム・フィリピン・ロシア)は経済投資に必要な資金が12から8へ変更されています。</p>
 <p></p>
 <p>【その他詳細】</p>
 <p></p>
