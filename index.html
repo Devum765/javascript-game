@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>アジア新時代 ver2.11</title>
+<title>アジア新時代 ver2.12</title>
 </head>
 <body>
 
@@ -1999,11 +1999,11 @@ function ComTurAct() {
 			if (Money<0) { NationArm[PlayNation]-=0.5; alert("資金不足により軍の戦力が低下しています"); Money=0; }
 			if (NationArm[PlayNation]<0) { NationArm[PlayNation]=0; }
 		}
-		if (NationEco[PlayNation]*3>6) {
+		if (NationEco[PlayNation]*3>8) {
 			if (Money>NationEco[PlayNation]*3) { Money=NationEco[PlayNation]*3; }
 		}
-		if (NationEco[PlayNation]*3<=6) {
-			if (Money>6) { Money=6; }
+		if (NationEco[PlayNation]*3<=8) {
+			if (Money>8) { Money=8; }
 		}
 		if (Scenario>=10) {
 			Oil-=NationArm[PlayNation]/2;
@@ -2469,7 +2469,7 @@ window.document.For06.Memo00.defaultValue = "清仏戦争の翌年から第一�
 <p></p>
 <p>・関係性25以上の国家には宣戦布告できません。</p>
 <p></p>
-<p>・資金は経済力の3倍、石油は4倍まで備蓄できます。備蓄限界を超えた分はターン更新時に破棄されます。(ただし資金は経済力に関わらず、最低6までは保有できます)。ちなみにターン更新時の処理順は、収入→維持費支払い→備蓄計算です。</p>
+<p>・資金は経済力の3倍、石油は4倍まで備蓄できます。備蓄限界を超えた分はターン更新時に破棄されます。(ただし資金は経済力に関わらず、最低8までは保有できます)。ちなみにターン更新時の処理順は、収入→維持費支払い→備蓄計算です。</p>
 <p></p>
 <p>・「植民地を保有している国の本国は要求できません」って言われる→各国には本国が指定されており、他に領土を保有している場合にはまずそちらを割譲させなければいけません。</p>
 <p>本国一覧　日本→日本　イギリス→オーストラリア　アメリカ→ハワイ　清→北京</p>
